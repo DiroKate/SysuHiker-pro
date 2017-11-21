@@ -14,6 +14,7 @@ import NoticeIcon from '../components/NoticeIcon';
 import GlobalFooter from '../components/GlobalFooter';
 import NotFound from '../routes/Exception/404';
 import styles from './BasicLayout.less';
+import { getCustomRoutes } from '../common/routes';
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -50,6 +51,7 @@ class BasicLayout extends React.PureComponent {
     this.menus = props.navData.reduce((arr, current) => arr.concat(current.children), []);
     this.state = {
       openKeys: this.getDefaultCollapsedSubMenus(props),
+      routes: [],
     };
   }
   getChildContext() {
@@ -64,10 +66,17 @@ class BasicLayout extends React.PureComponent {
     });
     return { location, breadcrumbNameMap };
   }
+  componentWillMount() {
+    const cusRoutes = getCustomRoutes(this.props.app);
+    this.setState({
+      routes: cusRoutes,
+    });
+  }
   componentDidMount() {
     this.props.dispatch({
       type: 'user/fetchCurrent',
     });
+
   }
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
@@ -241,6 +250,7 @@ class BasicLayout extends React.PureComponent {
   }
   render() {
     const { currentUser, collapsed, fetchingNotices, getRouteData } = this.props;
+    const { routes } = this.state;
 
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
@@ -357,6 +367,16 @@ class BasicLayout extends React.PureComponent {
                     />
                   )
                 )
+              }
+              {
+                routes.map(item => (
+                  <Route
+                    exact={item.exact}
+                    key={item.path}
+                    path={item.path}
+                    component={item.component}
+                  />
+                ))
               }
               <Redirect exact from="/" to="/dashboard/analysis" />
               <Route component={NotFound} />
