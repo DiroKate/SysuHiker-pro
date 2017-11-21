@@ -9,6 +9,8 @@ import groupBy from 'lodash/groupBy';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import Debounce from 'lodash-decorators/debounce';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 import HeaderSearch from '../components/HeaderSearch';
 import NoticeIcon from '../components/NoticeIcon';
 import GlobalFooter from '../components/GlobalFooter';
@@ -76,7 +78,6 @@ class BasicLayout extends React.PureComponent {
     this.props.dispatch({
       type: 'user/fetchCurrent',
     });
-
   }
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
