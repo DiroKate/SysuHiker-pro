@@ -1,63 +1,45 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
+import { Link } from 'dva/router';
 import { Form, Card, Radio, List, Tag, Icon, Avatar, Button, Input } from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import StandardFormRow from '../../components/StandardFormRow';
 import TagSelect from '../../components/TagSelect';
+import { eventTypeColor } from '../../common/config';
 import styles from './ActivityList.less';
 
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-const pageSize = 5;
 
 @Form.create()
 @connect(state => ({
-  list: state.list,
+  activity: state.activity,
 }))
 export default class ActivityList extends Component {
   componentDidMount() {
-    this.fetchMore();
-  }
-
-  setOwner = () => {
-    const { form } = this.props;
-    form.setFieldsValue({
-      owner: ['wzj'],
-    });
-  }
-
-  fetchMore = () => {
     this.props.dispatch({
-      type: 'list/fetch',
+      type: 'activity/fetch',
       payload: {
-        count: pageSize,
+        pageSize: 10,
+        page: 1,
       },
     });
   }
-
-  handleTabChange = (key) => {
+  handlePageChange = (page, pageSize) => {
     const { dispatch } = this.props;
-    switch (key) {
-      case 'docs':
-        dispatch(routerRedux.push('/list/search'));
-        break;
-      case 'app':
-        dispatch(routerRedux.push('/list/filter-card-list'));
-        break;
-      case 'project':
-        dispatch(routerRedux.push('/list/cover-card-list'));
-        break;
-      default:
-        break;
-    }
-  }
+    dispatch({
+      type: 'activity/fetch',
+      payload: {
+        page, pageSize,
+      },
+    });
+  };
 
   render() {
-    const { form, list: { list, loading } } = this.props;
+    const { form, activity: { list, loading, pagination } } = this.props;
     const { getFieldDecorator } = form;
 
     const IconText = ({ type, text }) => (
@@ -67,16 +49,27 @@ export default class ActivityList extends Component {
       </span>
     );
 
-    const ListContent = ({ data: { content, updatedAt, avatar, owner, href } }) => (
+    const ListContent = ({ data: {
+      event_comments, event_join_endtime, event_createUserAvatarUrl, event_createUserNick, event_createUserId,
+    } }) => (
       <div className={styles.listContent}>
-        <div className={styles.description}>{content}</div>
+        <div className={styles.description}>{event_comments}</div>
         <div className={styles.extra}>
-          <Avatar src={avatar} size="small" /><a href={href}>{owner}</a> 发布在 <a href={href}>{href}</a>
-          <em>{moment(updatedAt).format('YYYY-MM-DD hh:mm')}</em>
+          <Avatar src={event_createUserAvatarUrl} size="small" />
+          <Link to={`/users/${event_createUserId}`}>{event_createUserNick}</Link>
+          <em>报名截止：{moment(event_join_endtime).format('MM-DD HH:mm')}</em>
         </div>
       </div>
     );
-
+    const paginationProps = {
+      showSizeChanger: true,
+      showQuickJumper: true,
+      pageSize: pagination.pageSize,
+      total: pagination.total,
+      current: pagination.page,
+      onChange: this.handlePageChange,
+      onShowSizeChange: this.handlePageChange,
+    };
 
     const extraContent = (
       <RadioGroup defaultValue="all">
@@ -85,13 +78,12 @@ export default class ActivityList extends Component {
         <RadioButton value="end">已结束</RadioButton>
       </RadioGroup>
     );
-    const paginationProps = {
-      showSizeChanger: true,
-      showQuickJumper: true,
-      pageSize: 5,
-      total: 50,
-    };
 
+    const imgWrapper = url => (
+      <div className={styles.listItemExtra}>
+        <img src={url} alt="cover" />
+      </div>
+    );
     return (
       <PageHeaderLayout
         title="我们的活动"
@@ -141,30 +133,30 @@ export default class ActivityList extends Component {
             </Button>
             <List
               size="large"
-              loading={list.length === 0 ? loading : false}
+              loading={loading}
               rowKey="id"
               itemLayout="vertical"
               pagination={paginationProps}
               dataSource={list}
               renderItem={item => (
                 <List.Item
-                  key={item.id}
+                  key={item.event_id}
                   actions={[
-                    <IconText type="star-o" text={item.star} />,
-                    <IconText type="like-o" text={item.like} />,
-                    <IconText type="message" text={item.message} />,
+                    <IconText type="team" text={`${item.event_memberNum}/${item.event_maxhiker}`} />,
+                    <IconText
+                      type="calendar"
+                      text={`${moment(item.event_starttime).format('MM-DD HH:mm')} ~~ ${moment(item.event_endtime).format('MM-DD HH:mm')}`}
+                    />,
                   ]}
-                  extra={<div className={styles.listItemExtra} />}
+                  extra={imgWrapper(item.event_cover)}
                 >
                   <List.Item.Meta
                     title={(
-                      <a className={styles.listItemMetaTitle} href={item.href}>{item.title}</a>
+                      <Link to={`/activities/${item.event_id}`}><div className={styles.listItemMetaTitle}>{item.event_name}</div></Link>
                     )}
                     description={
                       <span>
-                        <Tag>Ant Design</Tag>
-                        <Tag>设计语言</Tag>
-                        <Tag>蚂蚁金服</Tag>
+                        <Tag color={eventTypeColor[item.event_type]}>{item.event_type}</Tag>
                       </span>
                     }
                   />
