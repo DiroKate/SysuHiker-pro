@@ -38,6 +38,7 @@
     "react-container-query": "^0.9.1",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.0.0",
+    "react-draft-wysiwyg": "^1.10.12",
     "react-fittext": "^1.0.0"
   },
   "devDependencies": {

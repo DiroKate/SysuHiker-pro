@@ -67,7 +67,7 @@ export default class PageHeader extends PureComponent {
       );
     } else if (location && location.pathname) {
       const pathSnippets = location.pathname.split('/').filter(i => i);
-      const extraBreadcrumbItems = pathSnippets.map((_, index) => {
+      const extraBreadcrumbItems = pathSnippets.map((value, index) => {
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
         return (
           <Breadcrumb.Item key={url}>
@@ -76,7 +76,7 @@ export default class PageHeader extends PureComponent {
               { [linkElement === 'a' ? 'href' : 'to']: url },
               breadcrumbNameMap[url] ||
               breadcrumbNameMap[url.replace('/', '')] ||
-              getBreadcrumbNameWithParams(breadcrumbNameMap, url) ||
+              getBreadcrumbNameWithParams(breadcrumbNameMap, url) || value ||
               url
             )}
           </Breadcrumb.Item>
