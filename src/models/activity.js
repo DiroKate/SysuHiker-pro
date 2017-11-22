@@ -8,6 +8,7 @@ export default {
     list: [],
     loading: false,
     pagination: {},
+    formSubmitting: false,
   },
 
   effects: {
@@ -35,6 +36,19 @@ export default {
         payload: false,
       });
     },
+    *create({ payload }, { call, put }) {
+      yield put({
+        type: 'changeFormSubmitting',
+        payload: true,
+      });
+      console.log(payload);
+
+      yield put({
+        type: 'changeFormSubmitting',
+        payload: false,
+      });
+      message.success('提交成功');
+    },
   },
 
   reducers: {
@@ -51,6 +65,12 @@ export default {
       return {
         ...state,
         loading: action.payload,
+      };
+    },
+    changeFormSubmitting(state, { payload }) {
+      return {
+        ...state,
+        formSubmitting: payload,
       };
     },
   },

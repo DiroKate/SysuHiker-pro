@@ -1,30 +1,29 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Link } from 'dva/router';
-import { Form, Card, Alert, Radio, DatePicker, Tag, Icon, Avatar, Button, Input } from 'antd';
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { Form, Card, Alert, Radio, DatePicker, Button, Input, message } from 'antd';
+import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import { eventTypeColor } from '../../../common/config';
+import { editorStateToHtml,uploadImageCallBack } from '../../../utils/editor';
 import styles from './index.less';
 
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
+const { TextArea } = Input;
 
 @Form.create()
 @connect(state => ({
-  activity: state.activity,
+  submitting: state.activity.formSubmitting,
 }))
 
 export default class ActivityCreatePage extends PureComponent {
   state = {
     editorState: EditorState.createEmpty(),
-  }
+  };
 
   onEditorStateChange = (editorState) => {
     this.setState({
@@ -32,8 +31,29 @@ export default class ActivityCreatePage extends PureComponent {
     });
   };
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const { contentValue, isEmpty } = editorStateToHtml(this.state.editorState);
+        if (!isEmpty) {
+          this.props.dispatch({
+            type: 'activity/create',
+            payload: {
+              ...values,
+              content: contentValue,
+            },
+          });
+        } else {
+          message.warning('请输入活动内容');
+        }
+      }
+    });
+  };
+
   render() {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { submitting } = this.props;
+    const { getFieldDecorator } = this.props.form;
     const { editorState } = this.state;
     const formItems = [];
 
@@ -54,16 +74,16 @@ export default class ActivityCreatePage extends PureComponent {
    * 表单项：字符串Input组件的表单项
    * @param  {[String]} label   [表单名称]
    * @param  {[ID]} id      [表单ID]
-   * @param  {[String]} message [表单的提示语]
+   * @param  {[String]} msg [表单的提示语]
    * @return {[type]}         [description]
    */
-    const stringInputValidate = ({ label, id, message, placeholder }) => (
+    const stringInputValidate = ({ label, id, msg, placeholder }) => (
       <FormItem {...formItemLayout} label={label} id={id} hasFeedback>
         {getFieldDecorator(id, {
           rules: [
             {
               required: true,
-              message,
+              msg,
               whitespace: true,
             },
           ],
@@ -94,12 +114,6 @@ export default class ActivityCreatePage extends PureComponent {
       </FormItem>
     );
 
-    const submitFormLayout = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 10, offset: 7 },
-      },
-    };
     const pageHeaderContent = (<Alert message="请认真填写活动详情。" type="warning" />);
 
     /**
@@ -108,7 +122,7 @@ export default class ActivityCreatePage extends PureComponent {
     const title = stringInputValidate({
       label: '标题',
       id: 'title',
-      message: '请输入标题',
+      msg: '请输入标题',
       placeholder: '给活动起个名字',
     });
 
@@ -138,8 +152,8 @@ export default class ActivityCreatePage extends PureComponent {
     /**
      * 出发地，目的地
      */
-    const departure = (stringInputValidate({ label: '集合地点', id: 'departure', message: '请输入集合地点' }));
-    const arrivals = (stringInputValidate({ label: '目的地', id: 'arrivals', message: '请输入目的地' }));
+    const departure = (stringInputValidate({ label: '集合地点', id: 'departure', msg: '请输入集合地点' }));
+    const arrivals = (stringInputValidate({ label: '目的地', id: 'arrivals', msg: '请输入目的地' }));
     /**
      * 活动时间
      */
@@ -224,12 +238,27 @@ export default class ActivityCreatePage extends PureComponent {
             history: {
               inDropdown: true,
             },
+            image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
           }}
           editorState={editorState}
           onEditorStateChange={this.onEditorStateChange}
         />
       </FormItem>);
 
+    const notes = (
+      <FormItem {...formItemLayout} label="备注" id="notes" hasFeedback>
+        {getFieldDecorator('notes')(
+          <TextArea style={{ minHeight: 32 }} placeholder="活动备注" rows={4} />
+        )}
+      </FormItem>
+    );
+    const submitBtn = (
+      <FormItem wrapperCol={{ span: 12, offset: 6 }} >
+        <Button className={styles.submitBtn} type="primary" htmlType="submit" size="large" loading={submitting}>
+          发布活动
+        </Button>
+      </FormItem>
+    );
 
     formItems.push(title);
     formItems.push(activityType);
@@ -240,6 +269,8 @@ export default class ActivityCreatePage extends PureComponent {
     formItems.push(collectionTime);
     formItems.push(applyTime);
     formItems.push(activityContent);
+    formItems.push(notes);
+    formItems.push(submitBtn);
 
     return (
       <PageHeaderLayout
@@ -250,9 +281,9 @@ export default class ActivityCreatePage extends PureComponent {
           <Form
             hideRequiredMark
             style={{ marginTop: 8 }}
+            onSubmit={this.handleSubmit}
           >
             {formItems}
-
           </Form>
         </Card>
       </PageHeaderLayout>
