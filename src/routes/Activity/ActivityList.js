@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Link } from 'dva/router';
+import { Link, routerRedux } from 'dva/router';
 import { Form, Card, Radio, List, Tag, Icon, Avatar, Button, Input } from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -37,6 +37,9 @@ export default class ActivityList extends Component {
       },
     });
   };
+  handleAddNew=() => {
+    this.props.dispatch(routerRedux.push('/activities/create'));
+  }
 
   render() {
     const { form, activity: { list, loading, pagination } } = this.props;
@@ -128,7 +131,7 @@ export default class ActivityList extends Component {
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={extraContent}
           >
-            <Button type="dashed" style={{ width: '100%', marginBottom: 8 }} icon="plus">
+            <Button type="dashed" style={{ width: '100%', marginBottom: 8 }} icon="plus" onClick={this.handleAddNew}>
               添加
             </Button>
             <List
