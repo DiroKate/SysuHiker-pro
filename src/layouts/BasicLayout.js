@@ -370,6 +370,7 @@ class BasicLayout extends React.PureComponent {
                     )
                   )
                 }
+<<<<<<< HEAD
                 {
                   routes.map(item => (
                     <Route
@@ -380,6 +381,8 @@ class BasicLayout extends React.PureComponent {
                     />
                   ))
                 }
+=======
+>>>>>>> 0d00edd876dd34ee98654fd294eafb59d5347906
                 <Redirect exact from="/" to="/dashboard/analysis" />
                 <Route component={NotFound} />
               </Switch>
