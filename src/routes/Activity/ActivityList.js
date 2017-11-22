@@ -13,6 +13,8 @@ import styles from './ActivityList.less';
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const TIME_FORMAT = 'MM月DD日(dddd) HH:mm';
+
 
 @Form.create()
 @connect(state => ({
@@ -60,7 +62,7 @@ export default class ActivityList extends Component {
         <div className={styles.extra}>
           <Avatar src={event_createUserAvatarUrl} size="small" />
           <Link to={`/users/${event_createUserId}`}>{event_createUserNick}</Link>
-          <em>报名截止：{moment(event_join_endtime).format('MM-DD HH:mm')}</em>
+          <em>报名截止：{moment(event_join_endtime).format(TIME_FORMAT)}</em>
         </div>
       </div>
     );
@@ -148,7 +150,7 @@ export default class ActivityList extends Component {
                     <IconText type="team" text={`${item.event_memberNum}/${item.event_maxhiker}`} />,
                     <IconText
                       type="calendar"
-                      text={`${moment(item.event_starttime).format('MM-DD HH:mm')} ~~ ${moment(item.event_endtime).format('MM-DD HH:mm')}`}
+                      text={`${moment(item.event_starttime).format(TIME_FORMAT)} ~~ ${moment(item.event_endtime).format(TIME_FORMAT)}`}
                     />,
                   ]}
                   extra={imgWrapper(item.event_cover)}
