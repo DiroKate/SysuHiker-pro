@@ -50,6 +50,11 @@ const eventDetails = Mock.mock({
   'event_maxhiker|12-14': 0,
   'event_memberNum|9-12': 0,
   event_comments: '@csentence',
+  event_place_of_departure: '@city',
+  event_destination: '@city',
+  event_gather_location: '广州酒家门口',
+  event_gather_time: '@datetime("yyyy-MM-dd HH:mm:ss")',
+
 });
 
 export default {

@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryHikeActivities,getActivity } from '../services/activity';
+import { queryHikeActivities, getActivity } from '../services/activity';
 
 export default {
   namespace: 'activity',
@@ -9,6 +9,8 @@ export default {
     loading: false,
     pagination: {},
     formSubmitting: false,
+    details: {},
+    detailsLoading: false,
   },
 
   effects: {
@@ -18,8 +20,6 @@ export default {
         payload: true,
       });
       const response = yield call(queryHikeActivities, payload);
-      const response2 = yield call(getActivity, {id:'123456879'});
-      console.log(response2);
       const { code, list, pageSize, page, totalCount, msg } = response;
       if (code === 0) {
         const pagination = {
@@ -27,7 +27,7 @@ export default {
         };
 
         yield put({
-          type: 'appendList',
+          type: 'save',
           payload: { list, pagination },
         });
       } else {
@@ -51,10 +51,30 @@ export default {
       });
       message.success('提交成功');
     },
+    *getDetails({ payload }, { call, put }) {
+      yield put({
+        type: 'changeDetailsLoading',
+        payload: true,
+      });
+      const response = yield call(getActivity, payload);
+      const { code, info, msg } = response;
+      if (code === 0) {
+        yield put({
+          type: 'details',
+          payload: info,
+        });
+      } else {
+        message.error(msg);
+      }
+      yield put({
+        type: 'changeDetailsLoading',
+        payload: false,
+      });
+    },
   },
 
   reducers: {
-    appendList(state, { payload }) {
+    save(state, { payload }) {
       const { pagination, list } = payload;
 
       return {
@@ -75,5 +95,18 @@ export default {
         formSubmitting: payload,
       };
     },
+    details(state, { payload }) {
+      return {
+        ...state,
+        details: payload,
+      };
+    },
+    changeDetailsLoading(state, action) {
+      return {
+        ...state,
+        detailsLoading: action.payload,
+      };
+    },
+
   },
 };

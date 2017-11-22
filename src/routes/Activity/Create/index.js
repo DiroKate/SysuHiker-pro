@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
 import { Form, Card, Alert, Radio, DatePicker, Button, Input, message } from 'antd';
 import { EditorState } from 'draft-js';
@@ -7,7 +6,7 @@ import { Editor } from 'react-draft-wysiwyg';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import { eventTypeColor } from '../../../common/config';
-import { editorStateToHtml,uploadImageCallBack } from '../../../utils/editor';
+import { editorStateToHtml, uploadImageCallBack } from '../../../utils/editor';
 import styles from './index.less';
 
 

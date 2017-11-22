@@ -18,7 +18,7 @@ const getCustomRoutes = app => [
     name: 'ActivityDetails',
     exact: true,
     path: '/activities/:id',
-    component: dynamicWrapper(app, ['profile'], () => import('../routes/Activity/Details')),
+    component: dynamicWrapper(app, ['activity'], () => import('../routes/Activity/Details')),
   },
 ];
 
