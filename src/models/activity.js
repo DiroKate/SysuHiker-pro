@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryHikeActivities } from '../services/activity';
+import { queryHikeActivities,getActivity } from '../services/activity';
 
 export default {
   namespace: 'activity',
@@ -18,6 +18,8 @@ export default {
         payload: true,
       });
       const response = yield call(queryHikeActivities, payload);
+      const response2 = yield call(getActivity, {id:'123456879'});
+      console.log(response2);
       const { code, list, pageSize, page, totalCount, msg } = response;
       if (code === 0) {
         const pagination = {

@@ -34,7 +34,37 @@ const ActivityList = Mock.mock({
 
 const tableListDataSource = ActivityList.list;
 
+const eventDetails = Mock.mock({
+  event_name: '@csentence',
+  event_type: '@eventType',
+  event_detail: '<p>hahaahahahahhahahahahahahhahahah</p>',
+  event_starttime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+  event_endtime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+  event_join_starttime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+  event_join_endtime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+  event_createtime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+  event_createUserId: '@id',
+  event_createUserNick: '@cname',
+  event_createUserEmail: '@email',
+  event_createUserAvatarUrl: 'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
+  'event_maxhiker|12-14': 0,
+  'event_memberNum|9-12': 0,
+  event_comments: '@csentence',
+});
+
 export default {
+  getHikeActivityById(req, res) {
+    const { id } = req.body;
+    const ret = {
+      ...eventDetails,
+      event_id: id,
+    };
+    res.json({
+      code: 0,
+      info: ret,
+      msg: 'success',
+    });
+  },
   getHikeActivities(req, res, u) {
     let url = u;
     if (!url || Object.prototype.toString.call(url) !== '[object String]') {
