@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryHikeActivities, getActivity } from '../services/activity';
+import { queryHikeActivities, getActivity, getMemberList } from '../services/activity';
 
 export default {
   namespace: 'activity',
@@ -11,6 +11,8 @@ export default {
     formSubmitting: false,
     details: {},
     detailsLoading: false,
+    members: [],
+    membersLoading: false,
   },
 
   effects: {
@@ -71,6 +73,26 @@ export default {
         payload: false,
       });
     },
+    *getMembers({ payload }, { call, put }) {
+      yield put({
+        type: 'changeMembersLoading',
+        payload: true,
+      });
+      const response = yield call(getMemberList, payload);
+      const { code, list, msg } = response;
+      if (code === 0) {
+        yield put({
+          type: 'members',
+          payload: list,
+        });
+      } else {
+        message.error(msg);
+      }
+      yield put({
+        type: 'changeMembersLoading',
+        payload: false,
+      });
+    },
   },
 
   reducers: {
@@ -105,6 +127,18 @@ export default {
       return {
         ...state,
         detailsLoading: action.payload,
+      };
+    },
+    members(state, { payload }) {
+      return {
+        ...state,
+        members: payload,
+      };
+    },
+    changeMembersLoading(state, action) {
+      return {
+        ...state,
+        membersLoading: action.payload,
       };
     },
 

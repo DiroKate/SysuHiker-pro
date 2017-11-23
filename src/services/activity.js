@@ -14,3 +14,13 @@ export async function getActivity(params) {
     },
   });
 }
+
+export async function getMemberList(params) {
+  return request('/api/get_member_list_byid', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}

@@ -7,7 +7,7 @@ import { getProfileBasicData } from './mock/profile';
 import { getProfileAdvancedData } from './mock/profile';
 import { getNotices } from './mock/notices';
 import { format, delay } from 'roadhog-api-doc';
-import { getHikeActivities, getHikeActivityById } from './mock/activity';
+import { getHikeActivities, getHikeActivityById,getHikeMemberListById } from './mock/activity';
 
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
@@ -83,6 +83,7 @@ const proxy = {
 
   'GET /api/hike_activities':getHikeActivities,
   'POST /api/get_hike_activity_byid': getHikeActivityById,
+  'POST /api/get_member_list_byid': getHikeMemberListById,
 };
 
 export default noProxy ? {} : delay(proxy, 1000);

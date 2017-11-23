@@ -54,10 +54,34 @@ const eventDetails = Mock.mock({
   event_destination: '@city',
   event_gather_location: '广州酒家门口',
   event_gather_time: '@datetime("yyyy-MM-dd HH:mm:ss")',
+});
 
+const fakeMemberList = Mock.mock({
+  'list|12-14': [{
+    event_joinlist_userid: '@id',
+    event_joinlist_usernick: '@cname',
+    event_joinlist_useremail: '@email',
+    event_joinlist_userAvatarUrl: 'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
+    'event_joinlist_usergender|1': ['GG', 'MM'],
+    'event_joinlist_userrole|1': ['领队', '协作', '头驴', '尾驴', '财务', '后勤', '环保', '作业',
+      '摄影', '医护', '厨师', '无线通讯', '骑行', '游泳', '跑步', '定向', '攀岩', '奢靡腐败'],
+    event_joinlist_joindate: '@datetime("yyyy-MM-dd HH:mm:ss")',
+    event_joinlist_comments: '@csentence',
+  }],
 });
 
 export default {
+  getHikeMemberListById(req, res) {
+    const { id } = req.body;
+    const list = fakeMemberList.list.map(value => (
+      { ...value, event_id: id }
+    ));
+    res.json({
+      code: 0,
+      list,
+      msg: 'success',
+    });
+  },
   getHikeActivityById(req, res) {
     const { id } = req.body;
     const ret = {
