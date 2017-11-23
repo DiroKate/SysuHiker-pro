@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
-import { Card, Avatar, Divider, Icon, Table, Collapse } from 'antd';
+import { Card, Avatar, Divider, Icon, Table, Collapse, Button, List } from 'antd';
 import { Editor } from 'react-draft-wysiwyg';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
@@ -19,6 +19,8 @@ const TIME_FORMAT = 'MM月DD日(dddd) HH:mm';
   loading: state.activity.detailsLoading,
   members: state.activity.members,
   mLoading: state.activity.membersLoading,
+  reList: state.activity.reList,
+  reLoading: state.activity.reLoading,
 }))
 export default class ActivityDetails extends Component {
   componentDidMount() {
@@ -32,10 +34,25 @@ export default class ActivityDetails extends Component {
       type: 'activity/getMembers',
       payload: { id },
     });
+    dispatch({
+      type: 'activity/getRe',
+      payload: { id, page: 1, pageSize: 5 },
+    });
   }
+  handleRePageChange = (page, pageSize) => {
+    const { dispatch, match } = this.props;
+    const { id } = match.params;
+    dispatch({
+      type: 'activity/getRe',
+      payload: {
+        page, pageSize, id,
+      },
+    });
+  };
 
   render() {
-    const { details, loading, members, mLoading } = this.props;
+    const { details, loading, members, mLoading,
+      reList: { list: replys, pagination: rePage }, reLoading } = this.props;
     const leaderInfo = (
       <div className={styles.extra}>
         <Avatar src={details.event_createUserAvatarUrl} size="small" />
@@ -120,8 +137,12 @@ export default class ActivityDetails extends Component {
       render: () => (<div>活动成员</div>),
     }];
 
-    const memberInfoCard = (
-      <Panel header="活动成员" key="1" className={styles.collapseHeader}>
+    const memberInfoPanel = (
+      <Panel
+        header={(<div className={styles.memberInfoPanelHeader}>活动成员</div>)}
+        key="1"
+        className={styles.collapseHeader}
+      >
         <Table
           loading={mLoading}
           rowKey="name"
@@ -133,14 +154,66 @@ export default class ActivityDetails extends Component {
       </Panel>
     );
 
+    const rePaginationProps = {
+      pageSize: rePage.pageSize,
+      total: rePage.total,
+      current: rePage.page,
+      onChange: this.handleRePageChange,
+    };
+
+    const contentNode = detail => (
+      <div className={styles.contentNode}>
+        <Editor
+          readOnly
+          defaultEditorState={htmlToEditorState(detail)}
+          toolbarHidden
+          toolbarClassName="show-editor-empty-toolbar"
+        />
+      </div>
+    );
+    const discussPanel = (
+      <Panel
+        header={(
+          <div>
+            <span style={{ fontSize: 16 }}>讨论</span>
+            <span>{`(${rePage.total})`}</span>
+          </div>)}
+        key="2"
+        className={styles.collapseHeader}
+      >
+        <List
+          rowKey="re_id"
+          loading={reLoading}
+          pagination={rePaginationProps}
+          dataSource={replys}
+          locale={{
+            emptyText: '居然没有人讨论',
+          }}
+          renderItem={item => (
+            <List.Item
+              actions={[<span>{`#${item.re_orderId}`}</span>]}
+            >
+              <List.Item.Meta
+                avatar={<Avatar src={item.re_createUserAvatarUrl} />}
+                title={(<Link to={`/users/${item.re_createUserId}`}>{item.re_createUserNick}</Link>)}
+                description={moment(item.re_createTime).fromNow()}
+              />
+              {contentNode(item.re_detail)}
+            </List.Item>
+          )}
+        />
+      </Panel>
+    );
+
     return (
       <PageHeaderLayout
         title={details.event_name}
         content={leaderInfo}
       >
         {baseInfoCard}
-        <Collapse bordered={false} defaultActiveKey={['1']} style={{ marginTop: 32 }}>
-          {memberInfoCard}
+        <Collapse bordered={false} defaultActiveKey={['2']}>
+          {memberInfoPanel}
+          {discussPanel}
         </Collapse>
       </PageHeaderLayout>
     );

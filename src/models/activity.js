@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryHikeActivities, getActivity, getMemberList } from '../services/activity';
+import { queryHikeActivities, getActivity, getMemberList, getReList } from '../services/activity';
 
 export default {
   namespace: 'activity',
@@ -13,6 +13,11 @@ export default {
     detailsLoading: false,
     members: [],
     membersLoading: false,
+    reList: {
+      list: [],
+      pagination: {},
+    },
+    reLoading: false,
   },
 
   effects: {
@@ -93,6 +98,30 @@ export default {
         payload: false,
       });
     },
+    *getRe({ payload }, { call, put }) {
+      yield put({
+        type: 'changeReLoading',
+        payload: true,
+      });
+      const response = yield call(getReList, payload);
+      const { code, list, pageSize, page, totalCount, msg } = response;
+      if (code === 0) {
+        const pagination = {
+          pageSize, page, total: totalCount,
+        };
+
+        yield put({
+          type: 'reReducer',
+          payload: { list, pagination },
+        });
+      } else {
+        message.error(msg);
+      }
+      yield put({
+        type: 'changeReLoading',
+        payload: false,
+      });
+    },
   },
 
   reducers: {
@@ -139,6 +168,19 @@ export default {
       return {
         ...state,
         membersLoading: action.payload,
+      };
+    },
+    reReducer(state, { payload }) {
+      const { pagination, list } = payload;
+      return {
+        ...state,
+        reList: { list, pagination },
+      };
+    },
+    changeReLoading(state, action) {
+      return {
+        ...state,
+        reLoading: action.payload,
       };
     },
 

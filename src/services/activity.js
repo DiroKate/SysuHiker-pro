@@ -24,3 +24,12 @@ export async function getMemberList(params) {
     },
   });
 }
+export async function getReList(params) {
+  return request('/api/get_re_list_byid', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}

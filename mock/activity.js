@@ -70,6 +70,19 @@ const fakeMemberList = Mock.mock({
   }],
 });
 
+const fakeReList = Mock.mock({
+  'list|20-30': [{
+    re_id: '@id',
+    're_orderId|+1': 1,
+    re_detail: '<p>评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容</p>',
+    re_createTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+    re_createUserId: '@id',
+    re_createUserNick: '@cname',
+    re_createUserEmail: '@email',
+    re_createUserAvatarUrl: 'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
+  }],
+});
+
 export default {
   getHikeMemberListById(req, res) {
     const { id } = req.body;
@@ -93,6 +106,37 @@ export default {
       info: ret,
       msg: 'success',
     });
+  },
+  getHikeReList(req, res) {
+    const { id, pageSize, page } = req.body;
+    const { list } = fakeReList;
+    const reList = list.map(value => ({
+      ...value,
+      re_postId: id,
+    }));
+    let size = 10;
+    if (pageSize) {
+      size = pageSize * 1;
+    }
+    let current = 1;
+    if (page) {
+      current = page * 1;
+    }
+
+    const result = {
+      list: reList.slice((current - 1) * size, current * size),
+      code: 0,
+      totalCount: reList.length,
+      page: current,
+      pageSize: size,
+      msg: 'success',
+    };
+
+    if (res && res.json) {
+      res.json(result);
+    } else {
+      return result;
+    }
   },
   getHikeActivities(req, res, u) {
     let url = u;
