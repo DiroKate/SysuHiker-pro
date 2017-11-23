@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
-import { Card, Avatar, Divider, Icon, Table, Collapse, Button, List } from 'antd';
+import { Card, Avatar, Divider, Icon, Table, Collapse,
+  Modal, Button, List, Row, Col, Tag } from 'antd';
 import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import DescriptionList from '../../../components/DescriptionList';
+import { eventTypeColor } from '../../../common/config';
+
 import { htmlToEditorState, uploadImageCallBack } from '../../../utils/editor';
+import JoinModal from './JoinModal';
 import styles from './index.less';
 
 const { Description } = DescriptionList;
@@ -26,6 +30,8 @@ const TIME_FORMAT = 'MM月DD日(dddd) HH:mm';
 export default class ActivityDetails extends Component {
   state = {
     editorState: EditorState.createEmpty(),
+    modalVisible: false,
+    modalInputValues: {},
   };
   componentDidMount() {
     const { match, dispatch } = this.props;
@@ -48,6 +54,11 @@ export default class ActivityDetails extends Component {
       editorState,
     });
   };
+  handleModalVisible = (flag) => {
+    this.setState({
+      modalVisible: !!flag,
+    });
+  }
   handleReSubmit = (e) => {
     e.preventDefault();
     // TODO
@@ -66,12 +77,60 @@ export default class ActivityDetails extends Component {
   render() {
     const { details, loading, members, mLoading,
       reList: { list: replys, pagination: rePage }, reLoading } = this.props;
+    const { editorState, modalVisible, modalInputValues } = this.state;
+    // TODO: 处理当前页面状态
+    const isOpen = true;
+    const isAdmin = false;
+    const isMember = false;
+    // --------------------
+
+    let btnGroup = [];
+    const joinBtn = (
+      <Col><Button
+        onClick={() => this.handleModalVisible(true)}
+        type="primary"
+        icon="check"
+      >报名参加</Button>
+      </Col>);
+    const editEventBtn = (<Col><Button icon="edit">编辑活动</Button></Col>);
+    const editJoinBtn = (<Col><Button icon="tool">编辑报名信息</Button></Col>);
+    const quitBtn = (<Col><Button type="danger" icon="close">退出活动</Button></Col>);
+    const disabledBtn = (<Col><Button type="danger" icon="frown-o" disabled>活动已截止报名</Button></Col>);
+
+    if (isOpen) {
+      if (isAdmin) {
+        btnGroup = [editEventBtn, editJoinBtn, quitBtn];
+      } else if (isMember) {
+        btnGroup = [editJoinBtn, quitBtn];
+      } else {
+        btnGroup = [joinBtn];
+      }
+    } else if (isAdmin) {
+      btnGroup = [editEventBtn, disabledBtn];
+    } else {
+      btnGroup = [disabledBtn];
+    }
+
     const leaderInfo = (
-      <div className={styles.extra}>
-        <Avatar src={details.event_createUserAvatarUrl} size="small" />
-        <Link to={`/users/${details.event_createUserId}`}>{details.event_createUserNick}</Link>
-        <em>发布于 {moment(details.event_createtime).fromNow()}</em>
-      </div>
+      <Row type="flex" align="middle" justify="space-between">
+        <Col span={10}>
+          <div className={styles.extra}>
+            <Avatar src={details.event_createUserAvatarUrl} size="small" />
+            <Link to={`/users/${details.event_createUserId}`}>{details.event_createUserNick}</Link>
+            <Tag
+              style={{ marginLeft: 8 }}
+              color={eventTypeColor[details.event_type]}
+            >{details.event_type}
+            </Tag>
+            <em>发布于 {moment(details.event_createtime).fromNow()}</em>
+          </div>
+        </Col>
+        <Col span={12}>
+          <Row type="flex" align="middle" justify="end" gutter={8}>
+            {btnGroup}
+          </Row>
+        </Col>
+      </Row>
     );
     const term = (text, type) => (
       <span>
@@ -102,7 +161,6 @@ export default class ActivityDetails extends Component {
               readOnly
               defaultEditorState={contentState}
               toolbarHidden
-              toolbarClassName="show-editor-empty-toolbar"
             />
           </Description>
         </DescriptionList>
@@ -183,7 +241,6 @@ export default class ActivityDetails extends Component {
           readOnly
           defaultEditorState={htmlToEditorState(detail)}
           toolbarHidden
-          toolbarClassName="show-editor-empty-toolbar"
         />
       </div>
     );
@@ -200,7 +257,7 @@ export default class ActivityDetails extends Component {
             inline: { options: ['bold', 'italic', 'underline'] },
             image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
           }}
-          editorState={this.state.editorState}
+          editorState={editorState}
           onEditorStateChange={this.onEditorStateChange}
         />
         <Button className={styles.reSubmitBtn} size="large" type="primary" onClick={this.handleReSubmit}>发表评论</Button>
@@ -251,7 +308,17 @@ export default class ActivityDetails extends Component {
           {memberInfoPanel}
           {discussPanel}
         </Collapse>
+        <Modal
+          title={`正在报名 @${details.event_createUserNick} 发起的 [${details.event_name}]`}
+          width={800}
+          visible={modalVisible}
+          onOk={this.handleAdd}
+          onCancel={() => this.handleModalVisible()}
+        >
+          <JoinModal />
+        </Modal>
       </PageHeaderLayout>
+
     );
   }
 }
