@@ -3,11 +3,12 @@ import moment from 'moment';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
 import { Card, Avatar, Divider, Icon, Table, Collapse, Button, List } from 'antd';
+import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import DescriptionList from '../../../components/DescriptionList';
-import { htmlToEditorState } from '../../../utils/editor';
+import { htmlToEditorState, uploadImageCallBack } from '../../../utils/editor';
 import styles from './index.less';
 
 const { Description } = DescriptionList;
@@ -23,6 +24,9 @@ const TIME_FORMAT = 'MM月DD日(dddd) HH:mm';
   reLoading: state.activity.reLoading,
 }))
 export default class ActivityDetails extends Component {
+  state = {
+    editorState: EditorState.createEmpty(),
+  };
   componentDidMount() {
     const { match, dispatch } = this.props;
     const { id } = match.params;
@@ -38,6 +42,15 @@ export default class ActivityDetails extends Component {
       type: 'activity/getRe',
       payload: { id, page: 1, pageSize: 5 },
     });
+  }
+  onEditorStateChange = (editorState) => {
+    this.setState({
+      editorState,
+    });
+  };
+  handleReSubmit = (e) => {
+    e.preventDefault();
+    // TODO
   }
   handleRePageChange = (page, pageSize) => {
     const { dispatch, match } = this.props;
@@ -112,7 +125,10 @@ export default class ActivityDetails extends Component {
         <div className={styles.extra}>
           <Avatar src={record.event_joinlist_userAvatarUrl} size="small" />
           <Link to={`/users/${record.event_joinlist_userid}`}>{record.event_joinlist_usernick}</Link>
-          <Icon type={record.event_joinlist_usergender === 'GG' ? 'man' : 'woman'} />
+          <Icon
+            style={{ marginLeft: 8, color: record.event_joinlist_usergender === 'GG' ? '#0033FF' : '#FF0066' }}
+            type={record.event_joinlist_usergender === 'GG' ? 'man' : 'woman'}
+          />
         </div>
       ),
     }, {
@@ -171,6 +187,25 @@ export default class ActivityDetails extends Component {
         />
       </div>
     );
+    const reEditor = (
+      <div className={styles.reEditorWrapper}>
+        <Editor
+          localization={{ locale: 'zh' }}
+          toolbarClassName={styles.editorToolbar}
+          wrapperClassName={styles.editorWrapper}
+          editorClassName={styles.editorEditor}
+          toolbarOnFocus
+          toolbar={{
+            options: ['inline', 'colorPicker', 'link', 'image', 'emoji', 'history'],
+            inline: { options: ['bold', 'italic', 'underline'] },
+            image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
+          }}
+          editorState={this.state.editorState}
+          onEditorStateChange={this.onEditorStateChange}
+        />
+        <Button className={styles.reSubmitBtn} size="large" type="primary" onClick={this.handleReSubmit}>发表评论</Button>
+      </div>
+    );
     const discussPanel = (
       <Panel
         header={(
@@ -202,6 +237,7 @@ export default class ActivityDetails extends Component {
             </List.Item>
           )}
         />
+        {reEditor}
       </Panel>
     );
 
@@ -211,7 +247,7 @@ export default class ActivityDetails extends Component {
         content={leaderInfo}
       >
         {baseInfoCard}
-        <Collapse bordered={false} defaultActiveKey={['2']}>
+        <Collapse bordered={false} defaultActiveKey={[]}>
           {memberInfoPanel}
           {discussPanel}
         </Collapse>
