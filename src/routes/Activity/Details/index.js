@@ -185,7 +185,7 @@ export default class ActivityDetails extends Component {
           <Link to={`/users/${record.event_joinlist_userid}`}>{record.event_joinlist_usernick}</Link>
           <Icon
             style={{ marginLeft: 8,
-              color: genderColor[record.event_joinlist_usergender] | genderColor.GG }}
+              color: genderColor[record.event_joinlist_usergender] }}
             type={record.event_joinlist_usergender === 'GG' ? 'man' : 'woman'}
           />
         </div>

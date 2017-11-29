@@ -15,8 +15,14 @@ module.exports = {
   },
   genderColor: {
     GG: '#0033FF',
-    MM: 'FF0066',
+    MM: '#FF0066',
   },
+  bbsTypeOptions: {
+    作业攻略: 'cyan',
+    技术讨论: 'green',
+    活动讨论: 'pink',
+    户外安全: 'blue',
+    其他: 'purple' },
   statement: [
     '认同“安全、环保、自助”的磨房户外理念。遵从《磨房告示》户外活动规则。',
     '服从统一指挥，发扬团队协作精神，倡导自助与必要的互助相结合的户外理念。不擅自离开活动路线。',

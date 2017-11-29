@@ -17,9 +17,15 @@ export const getNavData = app => [
     children: [
       {
         name: '活动列表',
-        icon: 'dashboard',
+        icon: 'compass',
         path: 'activities',
         component: dynamicWrapper(app, ['activity'], () => import('../routes/Activity/ActivityList')),
+      },
+      {
+        name: '逸仙茶馆',
+        icon: 'coffee',
+        path: 'teahouse',
+        component: dynamicWrapper(app, ['teahouse'], () => import('../routes/Teahouse/Teahouse')),
       },
       {
         name: 'Dashboard',
