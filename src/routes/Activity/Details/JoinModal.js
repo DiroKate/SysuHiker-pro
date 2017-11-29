@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Form, Input, Alert, Icon, Radio, Checkbox } from 'antd';
 
-import { statement } from '../../../common/config';
+import { statement,genderColor } from '../../../common/config';
 
 const FormItem = Form.Item;
 
@@ -114,10 +114,10 @@ export default class JoinModal extends PureComponent {
         })(
           <Radio.Group>
             <Radio value="GG">
-              <Icon type="man" style={{ color: '#0033FF' }} />GG
+              <Icon type="man" style={{ color: genderColor.GG }} />GG
             </Radio>
             <Radio value="MM">
-              <Icon type="woman" style={{ color: '#FF0066' }} />MM
+              <Icon type="woman" style={{ color: genderColor.MM }} />MM
             </Radio>
           </Radio.Group>)}
         </FormItem>

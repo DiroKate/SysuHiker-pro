@@ -9,7 +9,7 @@ import { Editor } from 'react-draft-wysiwyg';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import DescriptionList from '../../../components/DescriptionList';
-import { eventTypeColor } from '../../../common/config';
+import { eventTypeColor, genderColor } from '../../../common/config';
 
 import { htmlToEditorState, uploadImageCallBack } from '../../../utils/editor';
 import JoinModal from './JoinModal';
@@ -184,7 +184,8 @@ export default class ActivityDetails extends Component {
           <Avatar src={record.event_joinlist_userAvatarUrl} size="small" />
           <Link to={`/users/${record.event_joinlist_userid}`}>{record.event_joinlist_usernick}</Link>
           <Icon
-            style={{ marginLeft: 8, color: record.event_joinlist_usergender === 'GG' ? '#0033FF' : '#FF0066' }}
+            style={{ marginLeft: 8,
+              color: genderColor[record.event_joinlist_usergender] | genderColor.GG }}
             type={record.event_joinlist_usergender === 'GG' ? 'man' : 'woman'}
           />
         </div>
