@@ -26,6 +26,12 @@ const getCustomRoutes = app => [
     path: '/teahouse/create',
     component: dynamicWrapper(app, ['teahouse'], () => import('../routes/Teahouse/Create')),
   },
+  {
+    name: 'TeahouseDetails',
+    exact: true,
+    path: '/teahouse/:id',
+    component: dynamicWrapper(app, ['teahouse'], () => import('../routes/Teahouse/Details')),
+  },
 ];
 
 export default {
