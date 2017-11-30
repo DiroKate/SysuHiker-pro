@@ -1,9 +1,9 @@
 module.exports = {
-  projectName: 'SDN Hub',
-  company: 'The Cloud Compute Institute of GSTA',
-  slogan: '连接一切的可能',
-  home: '/res/vRegions',
-  defaultMenu: 'res',
+  projectName: '逸仙徒步',
+  company: 'Sysu Hiker',
+  slogan: '逸起Hike，仙至High',
+  home: '/activities',
+  defaultMenu: 'activities',
   eventTypeColor: {
     休闲拉练: 'cyan',
     正常拉练: 'green',

@@ -19,6 +19,8 @@ import styles from './BasicLayout.less';
 import { getCustomRoutes } from '../common/routes';
 import logo from '../assets/logo.svg';
 
+import { projectName, company, home, defaultMenu } from '../common/config';
+
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
@@ -110,7 +112,7 @@ class BasicLayout extends React.PureComponent {
     const currentMenuSelectedKeys = [...this.getCurrentMenuSelectedKeys(props)];
     currentMenuSelectedKeys.splice(-1, 1);
     if (currentMenuSelectedKeys.length === 0) {
-      return ['dashboard'];
+      return [defaultMenu];
     }
     return currentMenuSelectedKeys;
   }
@@ -178,10 +180,10 @@ class BasicLayout extends React.PureComponent {
   getPageTitle() {
     const { location, getRouteData } = this.props;
     const { pathname } = location;
-    let title = 'Ant Design Pro';
+    let title = projectName;
     getRouteData('BasicLayout').forEach((item) => {
       if (item.path === pathname) {
-        title = `${item.name} - Ant Design Pro`;
+        title = `${item.name} - ${projectName}`;
       }
     });
     return title;
@@ -283,7 +285,7 @@ class BasicLayout extends React.PureComponent {
           <div className={styles.logo}>
             <Link to="/">
               <img src={logo} alt="logo" />
-              <h1>Ant Design Pro</h1>
+              <h1>{projectName}</h1>
             </Link>
           </div>
           <Menu
@@ -381,7 +383,7 @@ class BasicLayout extends React.PureComponent {
                     />
                   ))
                 }
-                <Redirect exact from="/" to="/dashboard/analysis" />
+                <Redirect exact from="/" to={home} />
                 <Route component={NotFound} />
               </Switch>
             </div>
@@ -401,7 +403,7 @@ class BasicLayout extends React.PureComponent {
               }]}
               copyright={
                 <div>
-                  Copyright <Icon type="copyright" /> 2017 蚂蚁金服体验技术部出品
+                  Copyright <Icon type="copyright" /> 2017 {company}
                 </div>
               }
             />
