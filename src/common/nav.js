@@ -28,6 +28,12 @@ export const getNavData = app => [
         component: dynamicWrapper(app, ['teahouse'], () => import('../routes/Teahouse/Teahouse')),
       },
       {
+        name: '关于我们',
+        icon: 'smile-o',
+        path: 'about',
+        component: dynamicWrapper(app, [], () => import('../routes/About/index')),
+      },
+      {
         name: 'Dashboard',
         icon: 'dashboard',
         path: 'dashboard',

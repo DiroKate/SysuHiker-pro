@@ -123,25 +123,6 @@ export default class CoverCardList extends PureComponent {
       },
     ];
 
-    const pageHeaderContent = (
-      <div style={{ textAlign: 'center' }}>
-        <Input.Search
-          placeholder="请输入"
-          enterButton="搜索"
-          size="large"
-          onSearch={this.handleFormSubmit}
-          style={{ width: 522 }}
-        />
-      </div>
-    );
-
-    const formItemLayout = {
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
-
     return (
       <PageHeaderLayout
         title="搜索列表"
@@ -221,5 +202,24 @@ export default class CoverCardList extends PureComponent {
         </div>
       </PageHeaderLayout>
     );
+
+    const pageHeaderContent = (
+      <div style={{ textAlign: 'center' }}>
+        <Input.Search
+          placeholder="请输入"
+          enterButton="搜索"
+          size="large"
+          onSearch={this.handleFormSubmit}
+          style={{ width: 522 }}
+        />
+      </div>
+    );
+
+    const formItemLayout = {
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
   }
 }
