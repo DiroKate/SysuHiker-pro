@@ -34,18 +34,12 @@ const bbsList = Mock.mock({
 const bbsListDataSource = bbsList.list;
 export default {
   getFakeBbsListByType(req, res) {
-    const { type, pageSize: size, page: current } = req.body;
-
+    const { type, pageSize, page } = req.body;
     let dataSource = [...bbsListDataSource];
-    const page = current | 1;
-    const pageSize = size | 10;
 
-    console.log(page, pageSize, type);
     if (type && type !== 'all') {
       dataSource = dataSource.filter(data => data.post_type === type);
     }
-    console.log(dataSource.length);
-    console.log((page - 1) * pageSize, page * pageSize);
     const result = {
       list: dataSource.slice((page - 1) * pageSize, page * pageSize),
       code: 0,
@@ -54,7 +48,6 @@ export default {
       pageSize,
       msg: 'success',
     };
-    console.log(result.list.length);
 
     if (res && res.json) {
       res.json(result);

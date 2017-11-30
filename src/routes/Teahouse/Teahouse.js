@@ -20,7 +20,7 @@ const TIME_FORMAT = 'YYYY年MM月DD日';
 @connect(state => ({
   teahouse: state.teahouse,
 }))
-export default class ActivityList extends Component {
+export default class Teahouse extends Component {
   state = {
     type: 'all',
   };
@@ -35,9 +35,7 @@ export default class ActivityList extends Component {
     });
   }
   handlePageChange = (page, pageSize) => {
-    console.log(page,pageSize);
     const { dispatch } = this.props;
-    console.log(this.state.type);
     dispatch({
       type: 'teahouse/fetch',
       payload: {
@@ -58,10 +56,10 @@ export default class ActivityList extends Component {
     this.setState({
       type: target.value,
     });
-  }
+  };
   handleAddNew=() => {
-    this.props.dispatch(routerRedux.push('/activities/create'));
-  }
+    this.props.dispatch(routerRedux.push('/teahouse/create'));
+  };
 
   render() {
     const { form, teahouse: { list, loading, pagination } } = this.props;
