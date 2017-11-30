@@ -19,10 +19,7 @@ export default class ContactUs extends PureComponent {
         }}
           >
             <h2>逸仙徒步社区基金</h2>
-            <br />
             <p>逸仙徒步社区基金，属非营利及自愿性质，采用公开及透明的运作方式，来源于大家，服务于大家。</p>
-            <br />
-            <br />
             <ul>
               <li>
                 <b>基金目的：</b>
