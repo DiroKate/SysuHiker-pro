@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryItems, getActivity, getMemberList, getReList } from '../services/teahouse';
+import { queryItems, getArticle, getReList } from '../services/teahouse';
 
 export default {
   namespace: 'teahouse',
@@ -11,8 +11,6 @@ export default {
     formSubmitting: false,
     details: {},
     detailsLoading: false,
-    members: [],
-    membersLoading: false,
     reList: {
       list: [],
       pagination: {},
@@ -63,7 +61,7 @@ export default {
         type: 'changeDetailsLoading',
         payload: true,
       });
-      const response = yield call(getActivity, payload);
+      const response = yield call(getArticle, payload);
       const { code, info, msg } = response;
       if (code === 0) {
         yield put({
@@ -75,26 +73,6 @@ export default {
       }
       yield put({
         type: 'changeDetailsLoading',
-        payload: false,
-      });
-    },
-    *getMembers({ payload }, { call, put }) {
-      yield put({
-        type: 'changeMembersLoading',
-        payload: true,
-      });
-      const response = yield call(getMemberList, payload);
-      const { code, list, msg } = response;
-      if (code === 0) {
-        yield put({
-          type: 'members',
-          payload: list,
-        });
-      } else {
-        message.error(msg);
-      }
-      yield put({
-        type: 'changeMembersLoading',
         payload: false,
       });
     },
@@ -156,18 +134,6 @@ export default {
       return {
         ...state,
         detailsLoading: action.payload,
-      };
-    },
-    members(state, { payload }) {
-      return {
-        ...state,
-        members: payload,
-      };
-    },
-    changeMembersLoading(state, action) {
-      return {
-        ...state,
-        membersLoading: action.payload,
       };
     },
     reReducer(state, { payload }) {

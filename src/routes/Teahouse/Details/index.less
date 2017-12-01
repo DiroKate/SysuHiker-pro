@@ -1,0 +1,49 @@
+@import "~antd/lib/style/themes/default.less";
+
+.extra {
+  color: @text-color-secondary;
+  margin-top: 16px;
+  line-height: 22px;
+  & > :global(.ant-avatar) {
+    vertical-align: top;
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 1px;
+  }
+  & > em {
+    color: @disabled-color;
+    font-style: normal;
+    margin-left: 8px;
+  }
+}
+.contentNode {
+  margin-top: -80px;
+  margin-left: 32px;
+}
+
+.reEditorWrapper {
+  margin: 0 32px;
+  .reSubmitBtn {
+    margin: 16px;
+    float: right;
+  }
+}
+
+/* ------------- Editor ------------------- */
+.editorToolbar {
+  width: 100%;
+}
+
+.editorWrapper {
+  width: 100%;
+  display: block;
+  min-height: 100px;
+}
+
+.editorEditor {
+  min-height: 100px;
+  border: 2px solid @link-color;
+  border-radius: 2px;
+}

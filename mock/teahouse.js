@@ -32,6 +32,36 @@ const bbsList = Mock.mock({
   }],
 });
 const bbsListDataSource = bbsList.list;
+
+const article = Mock.mock({
+  // post_id,
+  post_title: '@csentence',
+  post_detail: '<div>this is info info info<br/>this is info info info<br/>this is info info info<br/></div>',
+  post_type: '@eventType',
+  post_keywords: 'a,b,c,d,e,f',
+  post_createTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+  post_createUserId: '@id',
+  post_createUserEmail: '@email',
+  post_createUserNick: '@cname',
+  post_createUserAvatarUrl: 'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
+  post_modifyUserId: '@id',
+  post_modifyTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+});
+
+const fakeReList = Mock.mock({
+  'list|12-21': [{
+    re_id: '@id',
+    // re_postId,
+    're_orderId|+1': 1,
+    re_detail: '<p>评论内容评论内容<br/>评论内容评论内容<br/>评论内容评论内容<br/>评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容</p>',
+    re_createTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+    re_createUserId: '@id',
+    re_createUserNick: '@cname',
+    re_createUserEmail: '@email',
+    re_createUserAvatarUrl: 'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
+
+  }],
+});
 export default {
   getFakeBbsListByType(req, res) {
     const { type, pageSize, page } = req.body;
@@ -46,6 +76,49 @@ export default {
       totalCount: dataSource.length,
       page,
       pageSize,
+      msg: 'success',
+    };
+
+    if (res && res.json) {
+      res.json(result);
+    } else {
+      return result;
+    }
+  },
+  getFakeArticle(req, res) {
+    const { id } = req.body;
+    const ret = {
+      ...article,
+      post_id: id,
+    };
+    res.json({
+      code: 0,
+      info: ret,
+      msg: 'success',
+    });
+  },
+  getFakeReList(req, res) {
+    const { id, pageSize, page } = req.body;
+    const { list } = fakeReList;
+    const reList = list.map(value => ({
+      ...value,
+      re_postId: id,
+    }));
+    let size = 10;
+    if (pageSize) {
+      size = pageSize * 1;
+    }
+    let current = 1;
+    if (page) {
+      current = page * 1;
+    }
+
+    const result = {
+      list: reList.slice((current - 1) * size, current * size),
+      code: 0,
+      totalCount: reList.length,
+      page: current,
+      pageSize: size,
       msg: 'success',
     };
 

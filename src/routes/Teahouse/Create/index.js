@@ -74,7 +74,7 @@ export default class TeahouseCreatePage extends PureComponent {
           rules: [
             {
               required: true,
-              message: '请选择活动类型',
+              message: '请选择文章类型',
             },
           ],
         })(

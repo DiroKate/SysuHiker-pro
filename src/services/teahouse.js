@@ -10,8 +10,8 @@ export async function queryItems(params) {
   });
 }
 
-export async function getActivity(params) {
-  return request('/api/get_hike_activity_byid', {
+export async function getArticle(params) {
+  return request('/api/get_article', {
     method: 'POST',
     body: {
       ...params,
@@ -20,17 +20,8 @@ export async function getActivity(params) {
   });
 }
 
-export async function getMemberList(params) {
-  return request('/api/get_member_list_byid', {
-    method: 'POST',
-    body: {
-      ...params,
-      method: 'post',
-    },
-  });
-}
 export async function getReList(params) {
-  return request('/api/get_re_list_byid', {
+  return request('/api/get_article_re', {
     method: 'POST',
     body: {
       ...params,
