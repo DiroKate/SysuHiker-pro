@@ -42,8 +42,12 @@ function RouterConfig({ history, app }) {
   const UserLayout = getLayout(navData, 'UserLayout').component;
   const BasicLayout = getLayout(navData, 'BasicLayout').component;
 
+  // 过滤掉不在菜单显示的路由
+  const basicNavData = navData.filter(item => item.layout === 'BasicLayout');
+
   const passProps = {
     app,
+    // navData: basicNavData,
     navData,
     getRouteData: (path) => {
       return getRouteData(navData, path);

@@ -193,14 +193,24 @@ export const getNavData = app => [
         path: 'user',
         children: [
           {
+            name: '登录1',
+            path: 'OLDlogin',
+            component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
+          },
+          {
             name: '登录',
             path: 'login',
-            component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
+            component: dynamicWrapper(app, ['sLogin'], () => import('../routes/SUser/Login')),
+          },
+          {
+            name: '注册1',
+            path: 'OLDregister',
+            component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
           },
           {
             name: '注册',
             path: 'register',
-            component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
+            component: dynamicWrapper(app, ['sRegister'], () => import('../routes/SUser/Register')),
           },
           {
             name: '注册结果',
