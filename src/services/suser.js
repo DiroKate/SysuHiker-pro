@@ -19,3 +19,7 @@ export async function fakeMobileLogin(params) {
     body: params,
   });
 }
+
+export async function fakeUser(params) {
+  return request('/api/get_user');
+}

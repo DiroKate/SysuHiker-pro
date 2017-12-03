@@ -34,6 +34,12 @@ export const getNavData = app => [
         component: dynamicWrapper(app, [], () => import('../routes/About/index')),
       },
       {
+        name: 'hahaha',
+        icon: 'smile-o',
+        path: 'me',
+        component: dynamicWrapper(app, ['suser'], () => import('../routes/SUser/Details')),
+      },
+      {
         name: 'Dashboard',
         icon: 'dashboard',
         path: 'dashboard',

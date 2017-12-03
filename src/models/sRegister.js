@@ -1,4 +1,4 @@
-import { reqister } from '../services/suer';
+import { reqister } from '../services/suser';
 
 export default {
   namespace: 'sRegister',

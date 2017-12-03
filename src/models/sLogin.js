@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router';
-import { fakeAccountLogin, fakeMobileLogin } from '../services/suer';
+import { fakeAccountLogin, fakeMobileLogin } from '../services/suser';
 
 export default {
   namespace: 'sLogin',

@@ -83,7 +83,7 @@ export default class PageHeader extends PureComponent {
             {createElement(
               isLinkable ? linkElement : 'span',
               { [linkElement === 'a' ? 'href' : 'to']: url },
-              currentBreadcrumb.name || url,
+              currentBreadcrumb.name || value || url,
             )}
           </Breadcrumb.Item>
         );

@@ -9,6 +9,7 @@ import { getNotices } from './mock/notices';
 import { format, delay } from 'roadhog-api-doc';
 import { getHikeActivities, getHikeActivityById, getHikeMemberListById, getHikeReList } from './mock/activity';
 import { getFakeBbsListByType, getFakeArticle, getFakeReList } from './mock/teahouse';
+import { getFakeUser } from './mock/user';
 
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
@@ -90,6 +91,8 @@ const proxy = {
   'POST /api/get_teahouse': getFakeBbsListByType,
   'POST /api/get_article': getFakeArticle,
   'POST /api/get_article_re':getFakeReList,
+
+  'GET /api/get_user': getFakeUser,
 };
 
 export default noProxy ? {} : delay(proxy, 1000);
