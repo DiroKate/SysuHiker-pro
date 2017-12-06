@@ -20,14 +20,15 @@ install:
   - npm install
 
 script:
-  - |
-    if [ "$TEST_TYPE" = lint ]; then
-      npm run lint
-    elif [ "$TEST_TYPE" = test-all ]; then
-      npm run test:all
-    elif [ "$TEST_TYPE" = test-dist ]; then
-      npm run site
-      mv dist/* ./
-      php -S localhost:8000 &
-      npm test .e2e.js
-    fi
+#  - |
+#    if [ "$TEST_TYPE" = lint ]; then
+#      npm run lint
+#    elif [ "$TEST_TYPE" = test-all ]; then
+#      npm run test:all
+#    elif [ "$TEST_TYPE" = test-dist ]; then
+#      npm run site
+#      mv dist/* ./
+#      php -S localhost:8000 &
+#      npm test .e2e.js
+#    fi
+  - npm run site
