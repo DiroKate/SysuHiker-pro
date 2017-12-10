@@ -17,9 +17,9 @@ addons:
 install:
   - export DISPLAY=':99.0'
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-  - npm install
+  - npm install --registry=https://registry.npm.taobao.org
 
-#script:
+script:
 #  - |
 #    if [ "$TEST_TYPE" = lint ]; then
 #      npm run lint
@@ -31,11 +31,11 @@ install:
 #      php -S localhost:8000 &
 #      npm test .e2e.js
 #    fi
-#  - npm run site
+  - npm run build
 
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
-  on:
-    branch: master
+#deploy:
+#  provider: pages
+#  skip_cleanup: true
+#  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+#  on:
+#    branch: master

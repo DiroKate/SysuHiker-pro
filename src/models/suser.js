@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { fakeUser } from '../services/suser';
 
 export default {
@@ -27,10 +28,15 @@ export default {
     },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(fakeUser);
-      yield put({
-        type: 'saveCurrentUser',
-        payload: response,
-      });
+      const { code, info, msg } = response;
+      if (code === 1) {
+        yield put({
+          type: 'saveCurrentUser',
+          payload: info,
+        });
+      } else {
+        message.error(msg);
+      }
     },
   },
 
