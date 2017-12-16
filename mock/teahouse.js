@@ -1,5 +1,4 @@
 import Mock from 'mockjs';
-import { getUrlParams } from './utils';
 
 const { Random } = Mock;
 Random.extend({

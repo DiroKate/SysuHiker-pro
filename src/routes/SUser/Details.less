@@ -1,15 +1,22 @@
 @import "~antd/lib/style/themes/default.less";
 
+.textOverflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+}
+
 .pageHeaderContent {
   display: flex;
   .avatar {
-    flex: 0 1 72px;
+    flex: 0 1 48px;
     margin-bottom: 8px;
     & > span {
-      border-radius: 72px;
+      border-radius: 48px;
       display: block;
-      width: 72px;
-      height: 72px;
+      width: 48px;
+      height: 48px;
     }
   }
   .content {
@@ -25,6 +32,58 @@
       font-weight: 500;
       color: @heading-color;
       margin-bottom: 12px;
+    }
+  }
+}
+
+.projectList {
+  :global {
+    .ant-card-meta-description {
+      color: @text-color-secondary;
+      height: 44px;
+      line-height: 22px;
+      overflow: hidden;
+    }
+  }
+  .cardTitle {
+    font-size: 0;
+    a {
+      color: @heading-color;
+      margin-left: 12px;
+      line-height: 24px;
+      height: 24px;
+      display: inline-block;
+      vertical-align: top;
+      font-size: @font-size-base;
+      &:hover {
+        color: @primary-color;
+      }
+    }
+  }
+  .projectGrid {
+    width: 33.33%;
+  }
+  .projectItemContent {
+    display: flex;
+    margin-top: 8px;
+    overflow: hidden;
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    .textOverflow();
+    a {
+      color: @text-color-secondary;
+      display: inline-block;
+      flex: 1 1 0;
+      .textOverflow();
+      &:hover {
+        color: @primary-color;
+      }
+    }
+    .datetime {
+      color: @disabled-color;
+      flex: 0 0 auto;
+      float: right;
     }
   }
 }

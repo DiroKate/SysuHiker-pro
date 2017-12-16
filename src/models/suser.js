@@ -29,7 +29,7 @@ export default {
     *fetchCurrent(_, { call, put }) {
       const response = yield call(fakeUser);
       const { code, info, msg } = response;
-      if (code === 1) {
+      if (code === 0) {
         yield put({
           type: 'saveCurrentUser',
           payload: info,

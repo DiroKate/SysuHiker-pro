@@ -17,6 +17,9 @@ const fakeUser = Mock.mock({
   user_interest: '领队+协作+头驴+尾驴+财务',
   user_comments: '@cparagraph(2)',
   user_avatar_url: "@url('http', 'image.com')",
+  'user_start_event_count|0-99': 0,
+  'user_join_event_count|0-99': 0,
+  'user_fly_event_count|0-99': 0,
 });
 
 export function getFakeUser(req, res) {
