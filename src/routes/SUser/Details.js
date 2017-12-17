@@ -8,6 +8,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import { Pie } from '../../components/Charts';
 import { genderColor } from '../../common/config';
+import SettingForm from './setting';
 
 import styles from './Details.less';
 
@@ -22,7 +23,7 @@ const TIME = value => (`${value}次`);
 export default class Details extends PureComponent {
   state={
     viewKey: 'welcome',
-  }
+  };
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -37,7 +38,11 @@ export default class Details extends PureComponent {
     this.setState({
       viewKey: key,
     });
-  }
+  };
+  handleUpdateInfo = (params) => {
+    console.log(params);
+  };
+
   render() {
     const { user, activities } = this.props;
     const { user_nick: nick } = user;
@@ -83,7 +88,6 @@ export default class Details extends PureComponent {
     const tabList = [{
       key: 'welcome',
       tab: 'Welcome',
-      default: true,
     }, {
       key: 'me',
       tab: '我的信息',
@@ -95,7 +99,9 @@ export default class Details extends PureComponent {
     const ShowView = () => {
       if (this.state.viewKey === 'setting') {
         return (
-          <div />
+          <Card bordered={false}>
+            <SettingForm user={user} onOk={this.handleUpdateInfo} />
+          </Card>
         );
       } else if (this.state.viewKey === 'me') {
         return (

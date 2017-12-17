@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { routerRedux } from 'dva/router';
 import { Layout, Menu, Icon, Spin, Tag, Dropdown, Avatar, message } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
@@ -60,10 +61,17 @@ export default class GlobalHeader extends PureComponent {
     }
   }
   handleMenuClick = ({ key }) => {
-    if (key === 'logout') {
-      this.props.dispatch({
-        type: 'login/logout',
-      });
+    switch (key) {
+      case 'logout':
+        this.props.dispatch({
+          type: 'login/logout',
+        });
+        break;
+      case 'setting':
+        this.props.dispatch(routerRedux.push('/me'));
+        break;
+      default:
+        break;
     }
   }
   toggle = () => {
@@ -86,8 +94,7 @@ export default class GlobalHeader extends PureComponent {
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.handleMenuClick}>
-        <Menu.Item disabled><Icon type="user" />个人中心</Menu.Item>
-        <Menu.Item disabled><Icon type="setting" />设置</Menu.Item>
+        <Menu.Item key="setting"><Icon type="user" />个人中心</Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout"><Icon type="logout" />退出登录</Menu.Item>
       </Menu>
