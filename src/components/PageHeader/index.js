@@ -72,7 +72,7 @@ export default class PageHeader extends PureComponent {
           itemRender={this.itemRender}
         />
       );
-    } else if (location && location.pathname) {
+    } else if (location && location.pathname && (!breadcrumbList)) {
       const pathSnippets = location.pathname.split('/').filter(i => i);
       const extraBreadcrumbItems = pathSnippets.map((value, index) => {
         const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
