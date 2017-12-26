@@ -1,13 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
 import { Icon } from 'antd';
 import GlobalFooter from '../components/GlobalFooter';
 import styles from './UserLayout.less';
+import { getRoutes } from '../utils/utils';
 
 import { projectName, slogan, company } from '../common/config';
-
 
 const links = [{
   title: '帮助',
@@ -23,27 +22,17 @@ const links = [{
 const copyright = <div>Copyright <Icon type="copyright" /> 2017 {company}</div>;
 
 class UserLayout extends React.PureComponent {
-  static childContextTypes = {
-    location: PropTypes.object,
-  }
-  getChildContext() {
-    const { location } = this.props;
-    return { location };
-  }
   getPageTitle() {
-    const { getRouteData, location } = this.props;
+    const { routerData, location } = this.props;
     const { pathname } = location;
     let title = projectName;
-    getRouteData('UserLayout').forEach((item) => {
-      if (item.path === pathname) {
-        title = `${item.name} - ${projectName}`;
-      }
-    });
+    if (routerData[pathname] && routerData[pathname].name) {
+      title = `${routerData[pathname].name} -  ${projectName}`;
+    }
     return title;
   }
   render() {
-    const { getRouteData } = this.props;
-
+    const { routerData, match } = this.props;
     return (
       <DocumentTitle title={this.getPageTitle()}>
         <div className={styles.container}>
@@ -57,13 +46,13 @@ class UserLayout extends React.PureComponent {
             <div className={styles.desc}>{slogan}</div>
           </div>
           {
-            getRouteData('UserLayout').map(item =>
+            getRoutes(match.path, routerData).map(item =>
               (
                 <Route
-                  exact={item.exact}
-                  key={item.path}
+                  key={item.key}
                   path={item.path}
                   component={item.component}
+                  exact={item.exact}
                 />
               )
             )

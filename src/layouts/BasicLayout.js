@@ -12,7 +12,7 @@ import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
 import NotFound from '../routes/Exception/404';
-import { getCustomRoutes } from '../common/routes';
+import { getRoutes } from '../utils/utils';
 
 import { projectName, company, home } from '../common/config';
 
@@ -43,57 +43,32 @@ class BasicLayout extends React.PureComponent {
   static childContextTypes = {
     location: PropTypes.object,
     breadcrumbNameMap: PropTypes.object,
-    routeData: PropTypes.array,
   }
   getChildContext() {
-    const { location, navData, getRouteData } = this.props;
-    const routeData = getRouteData('BasicLayout');
-    const firstMenuData = navData.reduce((arr, current) => arr.concat(current.children), []);
-    const menuData = this.getMenuData(firstMenuData, '');
-    const breadcrumbNameMap = {};
-
-    routeData.concat(menuData).forEach((item) => {
-      breadcrumbNameMap[item.path] = {
-        name: item.name,
-        component: item.component,
-      };
-    });
-    return { location, breadcrumbNameMap, routeData };
+    const { location, routerData } = this.props;
+    return {
+      location,
+      breadcrumbNameMap: routerData,
+    };
   }
 
   getPageTitle() {
-    const { location, getRouteData } = this.props;
+    const { routerData, location } = this.props;
     const { pathname } = location;
     let title = projectName;
-    getRouteData('BasicLayout').forEach((item) => {
-      if (item.path === pathname) {
-        title = `${item.name} - ${projectName}`;
-      }
-    });
+    if (routerData[pathname] && routerData[pathname].name) {
+      title = `${routerData[pathname].name} - ${projectName}`;
+    }
     return title;
   }
-  getMenuData = (data, parentPath) => {
-    let arr = [];
-    data.forEach((item) => {
-      if (item.name) {
-        arr.push({ path: `${parentPath}/${item.path}`, name: item.name });
-      }
-      if (item.children) {
-        arr = arr.concat(this.getMenuData(item.children, `${parentPath}/${item.path}`));
-      }
-    });
-    return arr;
-  }
   render() {
-    const { currentUser, collapsed, fetchingNotices, notices,
-      getRouteData, navData, location, dispatch, app } = this.props;
-    const routes = getCustomRoutes(app);
-
+    const {
+      currentUser, collapsed, fetchingNotices, notices, routerData, match, location, dispatch,
+    } = this.props;
     const layout = (
       <Layout>
         <SiderMenu
           collapsed={collapsed}
-          navData={navData}
           location={location}
           dispatch={dispatch}
         />
@@ -109,29 +84,19 @@ class BasicLayout extends React.PureComponent {
             <div style={{ minHeight: 'calc(100vh - 260px)' }}>
               <Switch>
                 {
-                  getRouteData('BasicLayout').map(item =>
+                  getRoutes(match.path, routerData).map(item =>
                     (
                       <Route
-                        exact={item.exact}
-                        key={item.path}
+                        key={item.key}
                         path={item.path}
                         component={item.component}
+                        exact={item.exact}
                       />
                     )
                   )
                 }
-                {
-                  routes.map(item => (
-                    <Route
-                      exact={item.exact}
-                      key={item.path}
-                      path={item.path}
-                      component={item.component}
-                    />
-                  ))
-                }
                 <Redirect exact from="/" to={home} />
-                <Route component={NotFound} />
+                <Route render={NotFound} />
               </Switch>
             </div>
             <GlobalFooter
