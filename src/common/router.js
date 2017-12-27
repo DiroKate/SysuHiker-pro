@@ -130,7 +130,6 @@ export const getRouterData = (app) => {
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());
-  console.log({ menuData });
   const routerDataWithName = {};
   Object.keys(routerData).forEach((item) => {
     routerDataWithName[item] = {
@@ -138,6 +137,5 @@ export const getRouterData = (app) => {
       name: routerData[item].name || menuData[item.replace(/^\//, '')],
     };
   });
-  console.log({ routerDataWithName });
   return routerDataWithName;
 };

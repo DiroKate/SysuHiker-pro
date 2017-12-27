@@ -1,8 +1,4 @@
 const menuData = [{
-  name: '活动列表',
-  icon: 'compass',
-  path: 'activities',
-}, {
   name: 'dashborad',
   icon: 'dashboard',
   path: 'dashboard',
