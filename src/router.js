@@ -4,7 +4,7 @@ import { LocaleProvider, Spin } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import dynamic from 'dva/dynamic';
 import { getRouterData } from './common/router';
-import { getMyRouterData } from './common/myRoutes';
+// import { getMyRouterData } from './common/myRoutes';
 
 import styles from './index.less';
 
@@ -15,29 +15,29 @@ dynamic.setDefaultLoadingComponent(() => {
 function RouterConfig({ history, app }) {
   const routerData = getRouterData(app);
   const UserLayout = routerData['/user'].component;
-  // const BasicLayout = routerData['/'].component;
-  // return (
-  //   <LocaleProvider locale={zhCN}>
-  //     <Router history={history}>
-  //       <Switch>
-  //         <Route path="/user" render={props => <UserLayout {...props} />} />
-  //         <Route path="/" render={props => <BasicLayout {...props} />} />
-  //       </Switch>
-  //     </Router>
-  //   </LocaleProvider>
-  // );
-  const myRouterData = getMyRouterData(app);
-  const MyLayout = myRouterData['/'].component;
+  const BasicLayout = routerData['/'].component;
   return (
     <LocaleProvider locale={zhCN}>
       <Router history={history}>
         <Switch>
           <Route path="/user" render={props => <UserLayout {...props} />} />
-          <Route path="/" render={props => <MyLayout {...props} />} />
+          <Route path="/" render={props => <BasicLayout {...props} />} />
         </Switch>
       </Router>
     </LocaleProvider>
   );
+  // const myRouterData = getMyRouterData(app);
+  // const MyLayout = myRouterData['/'].component;
+  // return (
+  //   <LocaleProvider locale={zhCN}>
+  //     <Router history={history}>
+  //       <Switch>
+  //         <Route path="/user" render={props => <UserLayout {...props} />} />
+  //         <Route path="/" render={props => <MyLayout {...props} />} />
+  //       </Switch>
+  //     </Router>
+  //   </LocaleProvider>
+  // );
 }
 
 export default RouterConfig;
