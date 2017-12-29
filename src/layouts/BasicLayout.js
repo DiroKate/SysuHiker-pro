@@ -7,17 +7,36 @@ import { Route, Redirect, Switch } from 'dva/router';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-
+import { enquireScreen } from 'enquire-js';
 import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
 import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
+import { getMenuData } from '../common/menu';
 
 import { projectName, company, home } from '../common/config';
 
-const { Content } = Layout;
+/**
+ * 根据菜单取得重定向地址.
+ */
+const redirectData = [];
+const getRedirect = (item) => {
+  if (item && item.children) {
+    if (item.children[0] && item.children[0].path) {
+      redirectData.push({
+        from: `/${item.path}`,
+        to: `/${item.children[0].path}`,
+      });
+      item.children.forEach((children) => {
+        getRedirect(children);
+      });
+    }
+  }
+};
+getMenuData().forEach(getRedirect);
 
+const { Content } = Layout;
 const query = {
   'screen-xs': {
     maxWidth: 575,
@@ -39,11 +58,20 @@ const query = {
   },
 };
 
+let isMobile;
+enquireScreen((b) => {
+  isMobile = b;
+});
+
 class BasicLayout extends React.PureComponent {
   static childContextTypes = {
     location: PropTypes.object,
     breadcrumbNameMap: PropTypes.object,
   }
+
+  state = {
+    isMobile,
+  };
   getChildContext() {
     const { location, routerData } = this.props;
     return {
@@ -51,7 +79,13 @@ class BasicLayout extends React.PureComponent {
       breadcrumbNameMap: routerData,
     };
   }
-
+  componentDidMount() {
+    enquireScreen((b) => {
+      this.setState({
+        isMobile: !!b,
+      });
+    });
+  }
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
@@ -71,6 +105,7 @@ class BasicLayout extends React.PureComponent {
           collapsed={collapsed}
           location={location}
           dispatch={dispatch}
+          isMobile={this.state.isMobile}
         />
         <Layout>
           <GlobalHeader
@@ -79,21 +114,25 @@ class BasicLayout extends React.PureComponent {
             notices={notices}
             collapsed={collapsed}
             dispatch={dispatch}
+            isMobile={this.state.isMobile}
           />
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <div style={{ minHeight: 'calc(100vh - 260px)' }}>
               <Switch>
                 {
-                  getRoutes(match.path, routerData).map(item =>
-                    (
-                      <Route
-                        key={item.key}
-                        path={item.path}
-                        component={item.component}
-                        exact={item.exact}
-                      />
-                    )
+                  redirectData.map(item =>
+                    <Redirect key={item.from} exact from={item.from} to={item.to} />
                   )
+                }
+                {
+                  getRoutes(match.path, routerData).map(item => (
+                    <Route
+                      key={item.key}
+                      path={item.path}
+                      component={item.component}
+                      exact={item.exact}
+                    />
+                  ))
                 }
                 <Redirect exact from="/" to={home} />
                 <Route render={NotFound} />
