@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Icon, BackTop } from 'antd';
+import { Layout, Icon, message, BackTop } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { Route, Redirect, Switch } from 'dva/router';
@@ -16,6 +16,7 @@ import { getRoutes } from '../utils/utils';
 import { getMenuData } from '../common/menu';
 
 import { projectName, company, home } from '../common/config';
+import logo from '../assets/logo.svg';
 
 /**
  * 根据菜单取得重定向地址.
@@ -68,7 +69,6 @@ class BasicLayout extends React.PureComponent {
     location: PropTypes.object,
     breadcrumbNameMap: PropTypes.object,
   }
-
   state = {
     isMobile,
   };
@@ -80,41 +80,75 @@ class BasicLayout extends React.PureComponent {
     };
   }
   componentDidMount() {
-    enquireScreen((b) => {
+    enquireScreen((mobile) => {
       this.setState({
-        isMobile: !!b,
+        isMobile: mobile,
       });
+    });
+    this.props.dispatch({
+      type: 'user/fetchCurrent',
     });
   }
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = projectName;
+    let title = 'Ant Design Pro';
     if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - ${projectName}`;
+      title = `${routerData[pathname].name} - Ant Design Pro`;
     }
     return title;
   }
+  handleMenuCollapse = (collapsed) => {
+    this.props.dispatch({
+      type: 'global/changeLayoutCollapsed',
+      payload: collapsed,
+    });
+  }
+  handleNoticeClear = (type) => {
+    message.success(`清空了${type}`);
+    this.props.dispatch({
+      type: 'global/clearNotices',
+      payload: type,
+    });
+  }
+  handleMenuClick = ({ key }) => {
+    if (key === 'logout') {
+      this.props.dispatch({
+        type: 'login/logout',
+      });
+    }
+  }
+  handleNoticeVisibleChange = (visible) => {
+    if (visible) {
+      this.props.dispatch({
+        type: 'global/fetchNotices',
+      });
+    }
+  }
   render() {
     const {
-      currentUser, collapsed, fetchingNotices, notices, routerData, match, location, dispatch,
+      currentUser, collapsed, fetchingNotices, notices, routerData, match, location,
     } = this.props;
     const layout = (
       <Layout>
         <SiderMenu
           collapsed={collapsed}
           location={location}
-          dispatch={dispatch}
           isMobile={this.state.isMobile}
+          onCollapse={this.handleMenuCollapse}
         />
         <Layout>
           <GlobalHeader
+            logo={logo}
             currentUser={currentUser}
             fetchingNotices={fetchingNotices}
             notices={notices}
             collapsed={collapsed}
-            dispatch={dispatch}
             isMobile={this.state.isMobile}
+            onNoticeClear={this.handleNoticeClear}
+            onCollapse={this.handleMenuCollapse}
+            onMenuClick={this.handleMenuClick}
+            onNoticeVisibleChange={this.handleNoticeVisibleChange}
           />
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <div style={{ minHeight: 'calc(100vh - 260px)' }}>
@@ -134,7 +168,7 @@ class BasicLayout extends React.PureComponent {
                     />
                   ))
                 }
-                <Redirect exact from="/" to={home} />
+                <Redirect exact from="/" to="/dashboard/analysis" />
                 <Route render={NotFound} />
               </Switch>
             </div>
@@ -154,13 +188,12 @@ class BasicLayout extends React.PureComponent {
               }]}
               copyright={
                 <div>
-                  Copyright <Icon type="copyright" /> 2017 {company}
+                  Copyright <Icon type="copyright" /> 2017 蚂蚁金服体验技术部出品
                 </div>
               }
             />
           </Content>
         </Layout>
-        <BackTop />
       </Layout>
     );
 

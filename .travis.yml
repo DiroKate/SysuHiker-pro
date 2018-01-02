@@ -20,22 +20,14 @@ install:
   - npm install --registry=https://registry.npm.taobao.org
 
 script:
-#  - |
-#    if [ "$TEST_TYPE" = lint ]; then
-#      npm run lint
-#    elif [ "$TEST_TYPE" = test-all ]; then
-#      npm run test:all
-#    elif [ "$TEST_TYPE" = test-dist ]; then
-#      npm run site
-#      mv dist/* ./
-#      php -S localhost:8000 &
-#      npm test .e2e.js
-#    fi
-  - npm run build
-
-#deploy:
-#  provider: pages
-#  skip_cleanup: true
-#  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
-#  on:
-#    branch: master
+  - |
+    if [ "$TEST_TYPE" = lint ]; then
+      npm run lint
+    elif [ "$TEST_TYPE" = test-all ]; then
+      npm run test:all
+    elif [ "$TEST_TYPE" = test-dist ]; then
+      npm run site
+      mv dist/* ./
+      php -S localhost:8000 &
+      DEBUG=* npm test .e2e.js
+    fi
