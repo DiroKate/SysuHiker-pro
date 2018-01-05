@@ -13,10 +13,14 @@ import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
 import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
+import Authorized from '../utils/Authorized';
 import { getMenuData } from '../common/menu';
 
 import { projectName, company, home } from '../common/config';
 import logo from '../assets/logo.svg';
+
+const { Content } = Layout;
+const { AuthorizedRoute } = Authorized;
 
 /**
  * 根据菜单取得重定向地址.
@@ -37,7 +41,6 @@ const getRedirect = (item) => {
 };
 getMenuData().forEach(getRedirect);
 
-const { Content } = Layout;
 const query = {
   'screen-xs': {
     maxWidth: 575,
@@ -132,6 +135,12 @@ class BasicLayout extends React.PureComponent {
     const layout = (
       <Layout>
         <SiderMenu
+          logo={logo}
+          // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
+          // If you do not have the Authorized parameter
+          // you will be forced to jump to the 403 interface without permission
+          Authorized={Authorized}
+          menuData={getMenuData()}
           collapsed={collapsed}
           location={location}
           isMobile={this.state.isMobile}
@@ -154,19 +163,23 @@ class BasicLayout extends React.PureComponent {
             <div style={{ minHeight: 'calc(100vh - 260px)' }}>
               <Switch>
                 {
-                  redirectData.map(item =>
-                    <Redirect key={item.from} exact from={item.from} to={item.to} />
+                  getRoutes(match.path, routerData).map(item =>
+                    (
+                      <AuthorizedRoute
+                        key={item.key}
+                        path={item.path}
+                        component={item.component}
+                        exact={item.exact}
+                        authority={item.authority}
+                        redirectPath="/exception/403"
+                      />
+                    )
                   )
                 }
                 {
-                  getRoutes(match.path, routerData).map(item => (
-                    <Route
-                      key={item.key}
-                      path={item.path}
-                      component={item.component}
-                      exact={item.exact}
-                    />
-                  ))
+                  redirectData.map(item =>
+                    <Redirect key={item.from} exact from={item.from} to={item.to} />
+                  )
                 }
                 <Redirect exact from="/" to={home} />
                 <Route render={NotFound} />
