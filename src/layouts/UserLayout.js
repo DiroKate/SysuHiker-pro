@@ -9,12 +9,15 @@ import { getRoutes } from '../utils/utils';
 import { projectName, slogan, company } from '../common/config';
 
 const links = [{
+  key: 'help',
   title: '帮助',
   href: '',
 }, {
+  key: 'privacy',
   title: '隐私',
   href: '',
 }, {
+  key: 'terms',
   title: '条款',
   href: '',
 }];
