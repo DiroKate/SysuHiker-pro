@@ -4,6 +4,7 @@ import DocumentTitle from 'react-document-title';
 import { Icon } from 'antd';
 import GlobalFooter from '../components/GlobalFooter';
 import styles from './UserLayout.less';
+import logo from '../assets/logo.svg';
 import { getRoutes } from '../utils/utils';
 
 import { projectName, slogan, company } from '../common/config';
@@ -22,7 +23,7 @@ const links = [{
   href: '',
 }];
 
-const copyright = <div>Copyright <Icon type="copyright" /> 2017 {company}</div>;
+const copyright = <div>Copyright <Icon type="copyright" /> 2018 {company}</div>;
 
 class UserLayout extends React.PureComponent {
   getPageTitle() {
@@ -42,7 +43,7 @@ class UserLayout extends React.PureComponent {
           <div className={styles.top}>
             <div className={styles.header}>
               <Link to="/">
-                <img alt="" className={styles.logo} src="https://gw.alipayobjects.com/zos/rmsportal/NGCCBOENpgTXpBWUIPnI.svg" />
+                <img alt="logo" className={styles.logo} src={logo} />
                 <span className={styles.title}>{projectName}</span>
               </Link>
             </div>
