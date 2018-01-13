@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Layout, Icon, message, BackTop } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
-import { Route, Redirect, Switch } from 'dva/router';
+import { Route, Redirect, Switch, routerRedux } from 'dva/router';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -119,6 +119,10 @@ class BasicLayout extends React.PureComponent {
       this.props.dispatch({
         type: 'login/logout',
       });
+    } else if (key === 'me') {
+      this.props.dispatch(
+        routerRedux.push('/me')
+      );
     }
   }
   handleNoticeVisibleChange = (visible) => {
