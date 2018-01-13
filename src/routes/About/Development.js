@@ -23,11 +23,12 @@ export default class Development extends PureComponent {
           <Description term={<Icon type="github" />}>
             <a href={`https://github.com/${github}`}>{github}</a>
           </Description>
-          <Description term={<Icon type="tags" />}>{
-            tags.map(value => (
-              <Tag>{value}</Tag>
-            ))
-          }
+          <Description term={<Icon type="tags" />}>
+            <div>
+              { tags.map(value => (
+                <Tag key={value}>{value}</Tag>
+            ))}
+            </div>
           </Description>
 
         </DescriptionList>
@@ -46,7 +47,8 @@ export default class Development extends PureComponent {
         <p>欢迎各位码农宅男加入逸仙徒步活动平台系统的开发,贡献免费劳动力，使之功能更健全更易用，方便咱广大驴友。</p>
         <DescriptionList size="large" title="有意者请联系" style={{ marginBottom: 32 }} col={2}>
           <Description>
-            {cardBox('php', '后端', 'later', 'later.h.p@qq.com', 'later2015/sysuhiker', ['PHP', 'SAE', 'mysql'])}
+            {cardBox('php', '后端', 'later', 'later.h.p@qq.com',
+              'later2015/sysuhiker', ['PHP', 'SAE', 'mysql'])}
           </Description>
           <Description>
             {cardBox('react', '前端', 'diroguan', 'diroguan@foxmail.com',

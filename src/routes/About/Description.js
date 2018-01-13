@@ -36,9 +36,9 @@ export default class Description extends PureComponent {
           </Card>
           <p>然后，逸仙徒步的第一批群众，在看到了这个帖子之后，就加进去逸仙徒步的群里面了。</p>
 
-          <Timeline pending={<a href="/home" > Continue ...</a>} className={styles.timeline}>
+          <Timeline pending={<a href="/" > Continue ...</a>} className={styles.timeline}>
             {aboutDescription.map(item => (
-              <Timeline.Item>
+              <Timeline.Item key={item}>
                 <p>{item}</p>
               </Timeline.Item>
       ))}
