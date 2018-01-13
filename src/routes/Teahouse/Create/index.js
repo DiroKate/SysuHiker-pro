@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Form, Card, Radio, Button, Input, message } from 'antd';
 import { EditorState } from 'draft-js';
@@ -14,7 +14,7 @@ import styles from './index.less';
   submitting: loading.effects['teahouse/create'],
 }))
 
-export default class TeahouseCreatePage extends PureComponent {
+export default class TeahouseCreatePage extends Component {
   state = {
     editorState: EditorState.createEmpty(),
   };
@@ -56,7 +56,7 @@ export default class TeahouseCreatePage extends PureComponent {
     };
 
     formItems.push(
-      <Form.Item {...formItemLayout} label="标题" hasFeedback>
+      <Form.Item key="title" {...formItemLayout} label="标题" hasFeedback>
         {getFieldDecorator('title', {
           rules: [
             {
@@ -69,7 +69,7 @@ export default class TeahouseCreatePage extends PureComponent {
       </Form.Item>);
 
     formItems.push(
-      <Form.Item {...formItemLayout} label="分类" hasFeedback>
+      <Form.Item key="type" {...formItemLayout} label="分类" hasFeedback>
         {getFieldDecorator('type', {
           rules: [
             {
@@ -86,7 +86,7 @@ export default class TeahouseCreatePage extends PureComponent {
       </Form.Item>);
 
     formItems.push(
-      <Form.Item {...formItemLayout} label="文章内容" hasFeedback>
+      <Form.Item key="content" {...formItemLayout} label="文章内容" hasFeedback>
         <Editor
           localization={{ locale: 'zh' }}
           toolbarClassName={styles.editorToolbar}
@@ -105,12 +105,14 @@ export default class TeahouseCreatePage extends PureComponent {
         />
       </Form.Item>);
     formItems.push(
-      <Form.Item {...formItemLayout} label="关键字" hasFeedback>
+      <Form.Item key="keywords" {...formItemLayout} label="关键字" hasFeedback>
         {getFieldDecorator('keywords')(<Input placeholder={"',' 分隔"} />)}
       </Form.Item>);
 
     formItems.push(
-      <Form.Item wrapperCol={{
+      <Form.Item
+        key="submitBtn"
+        wrapperCol={{
         span: 12,
         offset: 6,
       }}

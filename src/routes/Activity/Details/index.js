@@ -86,12 +86,13 @@ export default class ActivityDetails extends Component {
 
     let btnGroup = [];
     const joinBtn = (
-      <Col key="joinBtn"><Button
-        onClick={() => this.handleModalVisible(true)}
-        type="primary"
-        icon="check"
-      >报名参加
-                         </Button>
+      <Col key="joinBtn">
+        <Button
+          onClick={() => this.handleModalVisible(true)}
+          type="primary"
+          icon="check"
+        >报名参加
+        </Button>
       </Col>);
     const editEventBtn = (<Col key="editEventBtn"><Button icon="edit">编辑活动</Button></Col>);
     const editJoinBtn = (<Col key="editJoinBtn"><Button icon="tool">编辑报名信息</Button></Col>);

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Form, Card, Alert, Radio, DatePicker, Button, Input, message } from 'antd';
 import { EditorState } from 'draft-js';
@@ -18,7 +18,7 @@ const { TextArea } = Input;
 @connect(({ loading }) => ({
   submitting: loading.effects['activity/create'],
 }))
-export default class ActivityCreatePage extends PureComponent {
+export default class ActivityCreatePage extends Component {
   state = {
     editorState: EditorState.createEmpty(),
   };

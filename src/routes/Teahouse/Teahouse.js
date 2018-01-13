@@ -81,7 +81,7 @@ export default class Teahouse extends Component {
       <div className={styles.listContent}>
         <div className={styles.description}>
           {keywords.split(',').map(value => (
-            <Tag>{value}</Tag>
+            <Tag key={value}>{value}</Tag>
           ))}
         </div>
         <div className={styles.extra}>
@@ -94,7 +94,6 @@ export default class Teahouse extends Component {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      pageSize: pagination.pageSize,
       total: pagination.total,
       current: pagination.page,
       onChange: this.handlePageChange,
@@ -106,7 +105,7 @@ export default class Teahouse extends Component {
         <RadioButton value="all">全部</RadioButton>
         {
           Object.keys(bbsTypeOptions).map(option => (
-            <RadioButton value={option}>{option}</RadioButton>
+            <RadioButton key={option} value={option}>{option}</RadioButton>
           ))
         }
       </RadioGroup>
@@ -131,7 +130,7 @@ export default class Teahouse extends Component {
                     <TagSelect onChange={this.handleFormSubmit} expandable>
                       {
                         Object.keys(bbsTypeOptions).map(option => (
-                          <TagSelect.Option value={option}>{option}</TagSelect.Option>
+                          <TagSelect.Option key={option} value={option}>{option}</TagSelect.Option>
                         ))
                       }
                     </TagSelect>

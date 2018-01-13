@@ -100,7 +100,6 @@ export default class TeahouseDetails extends Component {
 
     /* 评论列表 */
     const rePaginationProps = {
-      pageSize: rePage.pageSize,
       total: rePage.total,
       current: rePage.page,
       onChange: this.handleRePageChange,
