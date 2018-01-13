@@ -80,7 +80,7 @@ export default class TeahouseCreatePage extends PureComponent {
         })(
           <Radio.Group>
             {Object.keys(bbsTypeOptions).map(key => (
-              <Radio value={key}>{key}</Radio>
+              <Radio key={key} value={key}>{key}</Radio>
             ))}
           </Radio.Group>)}
       </Form.Item>);

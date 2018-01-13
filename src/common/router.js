@@ -72,77 +72,44 @@ export const getRouterData = (app) => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
+    /* ============= START 逸仙徒步路由 =================== */
     '/activities': {
+      component: dynamicWrapper(app, [], () => import('../routes/Activity/ActivitySwitch')),
+    },
+    '/activities/list': {
       component: dynamicWrapper(app, ['activity'], () => import('../routes/Activity/ActivityList')),
+      name: '活动列表',
     },
     '/activities/create': {
       component: dynamicWrapper(app, ['activity'], () => import('../routes/Activity/Create')),
+      name: '创建活动',
     },
     '/activities/:id': {
       component: dynamicWrapper(app, ['activity'], () => import('../routes/Activity/Details')),
+      name: '活动详情',
     },
-    '/dashboard/analysis': {
-      component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
+    '/teahouse': {
+      component: dynamicWrapper(app, [], () => import('../routes/Teahouse/TeahouseSwitch')),
     },
-    '/dashboard/monitor': {
-      component: dynamicWrapper(app, ['monitor'], () => import('../routes/Dashboard/Monitor')),
+    '/teahouse/list': {
+      component: dynamicWrapper(app, ['teahouse'], () => import('../routes/Teahouse/Teahouse')),
+      name: '逸仙茶馆',
     },
-    '/dashboard/workplace': {
-      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Dashboard/Workplace')),
-      // hideInBreadcrumb: true,
-      // name: '工作台',
-      // authority: 'admin',
+    '/teahouse/create': {
+      component: dynamicWrapper(app, ['teahouse'], () => import('../routes/Teahouse/Create')),
+      name: '创建话题',
     },
-    '/form/basic-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
+    '/teahouse/:id': {
+      component: dynamicWrapper(app, ['teahouse'], () => import('../routes/Teahouse/Details')),
+      name: '话题详情',
     },
-    '/form/step-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
+    '/about': {
+      component: dynamicWrapper(app, [], () => import('../routes/About/index')),
+      name: '关于我们',
     },
-    '/form/step-form/info': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step1')),
-    },
-    '/form/step-form/confirm': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step2')),
-    },
-    '/form/step-form/result': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step3')),
-    },
-    '/form/advanced-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/AdvancedForm')),
-    },
-    '/list/table-list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
-    },
-    '/list/basic-list': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/BasicList')),
-    },
-    '/list/card-list': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
-    },
-    '/list/search': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
-    },
-    '/list/search/projects': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Projects')),
-    },
-    '/list/search/applications': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Applications')),
-    },
-    '/list/search/articles': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Articles')),
-    },
-    '/profile/basic': {
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),
-    },
-    '/profile/advanced': {
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/AdvancedProfile')),
-    },
-    '/result/success': {
-      component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
-    },
-    '/result/fail': {
-      component: dynamicWrapper(app, [], () => import('../routes/Result/Error')),
+    '/me': {
+      component: dynamicWrapper(app, ['suser', 'activity'], () => import('../routes/SUser/Details')),
+      name: '个人详情',
     },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),

@@ -1,4 +1,16 @@
 const menuData = [{
+  name: '活动列表',
+  icon: 'compass',
+  path: 'activities',
+}, {
+  name: '逸仙茶馆',
+  icon: 'coffee',
+  path: 'teahouse',
+}, {
+  name: '关于我们',
+  icon: 'smile-o',
+  path: 'about',
+}, {
   name: 'dashboard',
   icon: 'dashboard',
   path: 'dashboard',
