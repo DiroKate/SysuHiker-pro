@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
-import { Card, Avatar, Divider, Icon, Table, Collapse,
-  Modal, Button, List, Row, Col, Tag } from 'antd';
+import { Card, Avatar, Divider, Collapse, Button, List, Tag } from 'antd';
 import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 
@@ -16,11 +15,11 @@ import styles from './index.less';
 
 const { Panel } = Collapse;
 
-@connect(state => ({
-  details: state.teahouse.details,
-  loading: state.teahouse.detailsLoading,
-  reList: state.teahouse.reList,
-  reLoading: state.teahouse.reLoading,
+@connect(({ teahouse, loading }) => ({
+  details: teahouse.details,
+  loading: loading.effects['teahouse/getDetails'],
+  reList: teahouse.reList,
+  reLoading: loading.effects['teahouse/getRe'],
 }))
 export default class TeahouseDetails extends Component {
   state = {

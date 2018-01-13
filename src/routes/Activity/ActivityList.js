@@ -17,8 +17,9 @@ const TIME_FORMAT = 'MM月DD日(dddd) HH:mm';
 
 
 @Form.create()
-@connect(state => ({
-  activity: state.activity,
+@connect(({ activity, loading }) => ({
+  activity,
+  loading: loading.models.activity,
 }))
 export default class ActivityList extends Component {
   componentDidMount() {
@@ -44,7 +45,7 @@ export default class ActivityList extends Component {
   }
 
   render() {
-    const { form, activity: { list, loading, pagination } } = this.props;
+    const { form, loading, activity: { list, pagination } } = this.props;
     const { getFieldDecorator } = form;
 
     const IconText = ({ type, text }) => (

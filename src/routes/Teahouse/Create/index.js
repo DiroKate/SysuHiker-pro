@@ -10,8 +10,8 @@ import { editorStateToHtml, uploadImageCallBack } from '../../../utils/editor';
 import styles from './index.less';
 
 @Form.create()
-@connect(state => ({
-  submitting: state.teahouse.formSubmitting,
+@connect(({ loading }) => ({
+  submitting: loading.effects['teahouse/create'],
 }))
 
 export default class TeahouseCreatePage extends PureComponent {

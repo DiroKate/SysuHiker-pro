@@ -6,26 +6,17 @@ export default {
 
   state: {
     list: [],
-    loading: false,
     pagination: {},
-    formSubmitting: false,
     details: {},
-    detailsLoading: false,
     members: [],
-    membersLoading: false,
     reList: {
       list: [],
       pagination: {},
     },
-    reLoading: false,
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      yield put({
-        type: 'changeLoading',
-        payload: true,
-      });
       const response = yield call(queryHikeActivities, payload);
       const { code, list, pageSize, page, totalCount, msg } = response;
       if (code === 0) {
@@ -40,29 +31,12 @@ export default {
       } else {
         message.error(msg);
       }
-      yield put({
-        type: 'changeLoading',
-        payload: false,
-      });
     },
     *create({ payload }, { call, put }) {
-      yield put({
-        type: 'changeFormSubmitting',
-        payload: true,
-      });
       console.log(payload);
-
-      yield put({
-        type: 'changeFormSubmitting',
-        payload: false,
-      });
       message.success('提交成功');
     },
     *getDetails({ payload }, { call, put }) {
-      yield put({
-        type: 'changeDetailsLoading',
-        payload: true,
-      });
       const response = yield call(getActivity, payload);
       const { code, info, msg } = response;
       if (code === 0) {
@@ -73,16 +47,8 @@ export default {
       } else {
         message.error(msg);
       }
-      yield put({
-        type: 'changeDetailsLoading',
-        payload: false,
-      });
     },
     *getMembers({ payload }, { call, put }) {
-      yield put({
-        type: 'changeMembersLoading',
-        payload: true,
-      });
       const response = yield call(getMemberList, payload);
       const { code, list, msg } = response;
       if (code === 0) {
@@ -93,16 +59,8 @@ export default {
       } else {
         message.error(msg);
       }
-      yield put({
-        type: 'changeMembersLoading',
-        payload: false,
-      });
     },
     *getRe({ payload }, { call, put }) {
-      yield put({
-        type: 'changeReLoading',
-        payload: true,
-      });
       const response = yield call(getReList, payload);
       const { code, list, pageSize, page, totalCount, msg } = response;
       if (code === 0) {
@@ -117,10 +75,6 @@ export default {
       } else {
         message.error(msg);
       }
-      yield put({
-        type: 'changeReLoading',
-        payload: false,
-      });
     },
   },
 
@@ -134,42 +88,20 @@ export default {
         pagination,
       };
     },
-    changeLoading(state, action) {
-      return {
-        ...state,
-        loading: action.payload,
-      };
-    },
-    changeFormSubmitting(state, { payload }) {
-      return {
-        ...state,
-        formSubmitting: payload,
-      };
-    },
     details(state, { payload }) {
       return {
         ...state,
         details: payload,
       };
     },
-    changeDetailsLoading(state, action) {
-      return {
-        ...state,
-        detailsLoading: action.payload,
-      };
-    },
+
     members(state, { payload }) {
       return {
         ...state,
         members: payload,
       };
     },
-    changeMembersLoading(state, action) {
-      return {
-        ...state,
-        membersLoading: action.payload,
-      };
-    },
+
     reReducer(state, { payload }) {
       const { pagination, list } = payload;
       return {
@@ -177,12 +109,7 @@ export default {
         reList: { list, pagination },
       };
     },
-    changeReLoading(state, action) {
-      return {
-        ...state,
-        reLoading: action.payload,
-      };
-    },
+
 
   },
 };

@@ -17,8 +17,9 @@ const TIME_FORMAT = 'YYYY年MM月DD日';
 
 
 @Form.create()
-@connect(state => ({
-  teahouse: state.teahouse,
+@connect(({ teahouse, loading }) => ({
+  teahouse,
+  loading: loading.models.teahouse,
 }))
 export default class Teahouse extends Component {
   state = {
@@ -62,7 +63,7 @@ export default class Teahouse extends Component {
   };
 
   render() {
-    const { form, teahouse: { list, loading, pagination } } = this.props;
+    const { form, loading, teahouse: { list, pagination } } = this.props;
     const { getFieldDecorator } = form;
 
     const IconText = ({ type, text }) => (

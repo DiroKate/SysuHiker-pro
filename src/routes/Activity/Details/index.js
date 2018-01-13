@@ -19,13 +19,13 @@ const { Description } = DescriptionList;
 const { Panel } = Collapse;
 const TIME_FORMAT = 'MM月DD日(dddd) HH:mm';
 
-@connect(state => ({
-  details: state.activity.details,
-  loading: state.activity.detailsLoading,
-  members: state.activity.members,
-  mLoading: state.activity.membersLoading,
-  reList: state.activity.reList,
-  reLoading: state.activity.reLoading,
+@connect(({ activity, loading }) => ({
+  details: activity.details,
+  loading: loading.effects['activity/getDetails'],
+  members: activity.members,
+  mLoading: loading.effects['activity/getMembers'],
+  reList: activity.reList,
+  reLoading: loading.effects['activity/getRe'],
 }))
 export default class ActivityDetails extends Component {
   state = {

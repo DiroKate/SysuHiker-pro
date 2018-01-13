@@ -15,10 +15,9 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 @Form.create()
-@connect(state => ({
-  submitting: state.activity.formSubmitting,
+@connect(({ loading }) => ({
+  submitting: loading.effects['activity/create'],
 }))
-
 export default class ActivityCreatePage extends PureComponent {
   state = {
     editorState: EditorState.createEmpty(),
