@@ -70,7 +70,6 @@ export default class ActivityList extends Component {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      pageSize: pagination.pageSize,
       total: pagination.total,
       current: pagination.page,
       onChange: this.handlePageChange,

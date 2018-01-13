@@ -76,7 +76,7 @@ export default class ActivityCreatePage extends PureComponent {
    * @return {[type]}         [description]
    */
     const stringInputValidate = ({ label, id, msg, placeholder }) => (
-      <FormItem {...formItemLayout} label={label} id={id} hasFeedback>
+      <FormItem {...formItemLayout} label={label} key={id} hasFeedback>
         {getFieldDecorator(id, {
           rules: [
             {
@@ -106,7 +106,7 @@ export default class ActivityCreatePage extends PureComponent {
       ],
     };
     const rangePickerValidate = ({ label, id }) => (
-      <FormItem {...formItemLayout} label={label} id={id}>
+      <FormItem {...formItemLayout} label={label} key={id}>
         {getFieldDecorator(id, rangeConfig)(
           <RangePicker {...datePickProps} />)}
       </FormItem>
@@ -128,7 +128,7 @@ export default class ActivityCreatePage extends PureComponent {
      * 活动类型
      */
     const activityType = (
-      <FormItem {...formItemLayout} label="活动类型" id="activityType" hasFeedback>
+      <FormItem {...formItemLayout} label="活动类型" key="activityType" hasFeedback>
         {getFieldDecorator('activityType', {
            rules: [
              {
@@ -140,7 +140,7 @@ export default class ActivityCreatePage extends PureComponent {
            <Radio.Group>
              {
                 Object.keys(eventTypeColor).map(value => (
-                  <Radio value={value}>{value}</Radio>
+                  <Radio key={value} value={value}>{value}</Radio>
                 ))
               }
            </Radio.Group>)}
@@ -164,7 +164,7 @@ export default class ActivityCreatePage extends PureComponent {
         labelCol={{ xs: { span: 24 }, sm: { span: 3 }, md: { span: 4 } }}
         wrapperCol={{ xs: { span: 24 }, sm: { span: 3 } }}
         label="人数上限"
-        id="maxPeople"
+        key="maxPeople"
         hasFeedback
       >
         {getFieldDecorator('maxPeople', {
@@ -187,7 +187,7 @@ export default class ActivityCreatePage extends PureComponent {
      * 集合时间
      */
     const collectionTime = (
-      <FormItem {...formItemLayout} label="集合时间" id="collectionTime" hasFeedback>
+      <FormItem {...formItemLayout} label="集合时间" key="collectionTime" hasFeedback>
         {getFieldDecorator('collectionTime', {
            rules: [
              {
@@ -213,6 +213,7 @@ export default class ActivityCreatePage extends PureComponent {
       <FormItem
         {...formItemLayout}
         label="活动内容"
+        key="activityContent"
         hasFeedback
       >
         <Editor
@@ -234,14 +235,14 @@ export default class ActivityCreatePage extends PureComponent {
       </FormItem>);
 
     const notes = (
-      <FormItem {...formItemLayout} label="备注" id="notes" hasFeedback>
+      <FormItem {...formItemLayout} label="备注" key="notes" hasFeedback>
         {getFieldDecorator('notes')(
           <TextArea style={{ minHeight: 32 }} placeholder="活动备注" rows={4} />
         )}
       </FormItem>
     );
     const submitBtn = (
-      <FormItem wrapperCol={{ span: 12, offset: 6 }} >
+      <FormItem key="submitBtn" wrapperCol={{ span: 12, offset: 6 }} >
         <Button className={styles.submitBtn} type="primary" htmlType="submit" size="large" loading={submitting}>
           发布活动
         </Button>

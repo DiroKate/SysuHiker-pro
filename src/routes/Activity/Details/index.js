@@ -86,16 +86,17 @@ export default class ActivityDetails extends Component {
 
     let btnGroup = [];
     const joinBtn = (
-      <Col><Button
+      <Col key="joinBtn"><Button
         onClick={() => this.handleModalVisible(true)}
         type="primary"
         icon="check"
-      >报名参加</Button>
+      >报名参加
+                         </Button>
       </Col>);
-    const editEventBtn = (<Col><Button icon="edit">编辑活动</Button></Col>);
-    const editJoinBtn = (<Col><Button icon="tool">编辑报名信息</Button></Col>);
-    const quitBtn = (<Col><Button type="danger" icon="close">退出活动</Button></Col>);
-    const disabledBtn = (<Col><Button type="danger" icon="frown-o" disabled>活动已截止报名</Button></Col>);
+    const editEventBtn = (<Col key="editEventBtn"><Button icon="edit">编辑活动</Button></Col>);
+    const editJoinBtn = (<Col key="editJoinBtn"><Button icon="tool">编辑报名信息</Button></Col>);
+    const quitBtn = (<Col key="quitBtn"><Button type="danger" icon="close">退出活动</Button></Col>);
+    const disabledBtn = (<Col key="disabledBtn"><Button type="danger" icon="frown-o" disabled>活动已截止报名</Button></Col>);
 
     if (isOpen) {
       if (isAdmin) {
