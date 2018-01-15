@@ -106,6 +106,7 @@ const menuData = [{
 //   }, {
 //     name: '触发异常',
 //     path: 'trigger',
+//     hideInMenu: true,
 //   }],
 // }, {
 //   name: '账户',
