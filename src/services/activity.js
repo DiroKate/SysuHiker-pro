@@ -1,8 +1,17 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
+import { md5Sign } from '../utils/utils';
+
+// export async function queryHikeActivities(params) {
+//   return request(`/api/hike_activities?${stringify(params)}`);
+// }
 
 export async function queryHikeActivities(params) {
-  return request(`/api/hike_activities?${stringify(params)}`);
+  const sign = md5Sign({ service: 'Event.GetEventList' });
+  return request(`/sysuhikerapi/?service=Event.GetEventList&sign=${sign}`, {
+    method: 'POST',
+    body: JSON.stringify({ ...params, sign }),
+  });
 }
 
 export async function getActivity(params) {

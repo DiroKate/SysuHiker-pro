@@ -18,5 +18,12 @@
   },
   "publicPath": "/",
   "disableDynamicImport": true,
+  "proxy": {
+    "/sysuhikerapi": {
+      "target": "http://localhost/PhalApi/Public",
+      "changeOrigin": true,
+      "pathRewrite": { "^/sysuhikerapi" : "" }
+    }
+  },
   "hash": true
 }

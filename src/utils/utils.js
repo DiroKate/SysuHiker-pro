@@ -1,4 +1,5 @@
 import moment from 'moment';
+import md5 from 'md5';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -131,4 +132,10 @@ export function getRoutes(path, routerData) {
     };
   });
   return renderRoutes;
+}
+
+export function md5Sign(params) {
+  const today = moment().format('YYYYMMDD');
+  const paramValues = Object.values(params).join('');
+  return md5(today + paramValues);
 }
