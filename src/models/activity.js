@@ -18,6 +18,7 @@ export default {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryHikeActivities, payload);
+      console.log(response);
       const { code, list, pageSize, page, totalCount, msg } = response;
       if (code === 0) {
         const pagination = {
