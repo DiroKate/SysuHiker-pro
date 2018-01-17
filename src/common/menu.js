@@ -12,6 +12,10 @@ const menuData = [{
   name: '关于我们',
   icon: 'smile-o',
   path: 'about',
+}, {
+  name: 'ceshi',
+  icon: 'smile-o',
+  path: 'test',
 // }, {
 //   name: 'dashboard',
 //   icon: 'dashboard',
