@@ -2,18 +2,15 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Link, routerRedux } from 'dva/router';
-import { Form, Card, Radio, List, Tag, Icon, Avatar, Button, Input } from 'antd';
+import { Form, Card, Radio, List, Tag, Icon, Avatar, Button } from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import StandardFormRow from '../../components/StandardFormRow';
-import TagSelect from '../../components/TagSelect';
 import { eventTypeColor } from '../../common/config';
 import styles from './ActivityList.less';
 
-const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-const TIME_FORMAT = 'MM月DD日(dddd) HH:mm';
+const TIME_FORMAT = 'M月D日(ddd) HH:mm';
 
 
 @Form.create()
@@ -46,7 +43,6 @@ export default class ActivityList extends Component {
 
   render() {
     const { form, loading, activity: { list, pagination } } = this.props;
-    const { getFieldDecorator } = form;
 
     const IconText = ({ type, text }) => (
       <span>
@@ -95,37 +91,6 @@ export default class ActivityList extends Component {
         content="AA户外概念下，人人都是领队，如果有好玩的路线或者点子，不妨创建一个活动，找到小伙伴们一起协助组织玩耍，认识更多靠谱的朋友们。"
       >
         <div>
-          <Card bordered={false}>
-            <Form layout="inline">
-              <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
-                <FormItem>
-                  {getFieldDecorator('category')(
-                    <TagSelect onChange={this.handleFormSubmit} expandable>
-                      <TagSelect.Option value="休闲拉练">休闲拉练</TagSelect.Option>
-                      <TagSelect.Option value="正常拉练">正常拉练</TagSelect.Option>
-                      <TagSelect.Option value="极限拉练">极限拉练</TagSelect.Option>
-                      <TagSelect.Option value="休闲露营">休闲露营</TagSelect.Option>
-                      <TagSelect.Option value="长线露营">长线露营</TagSelect.Option>
-                      <TagSelect.Option value="休闲户外">休闲户外</TagSelect.Option>
-                      <TagSelect.Option value="非户外活动AA约伴">非户外活动AA约伴</TagSelect.Option>
-                    </TagSelect>
-                  )}
-                </FormItem>
-              </StandardFormRow>
-              <StandardFormRow
-                title="活动搜索"
-                block
-              >
-                <Input.Search
-                  placeholder="请输入"
-                  enterButton="搜索"
-                  size="large"
-                  onSearch={this.handleFormSubmit}
-                  style={{ width: 522 }}
-                />
-              </StandardFormRow>
-            </Form>
-          </Card>
           <Card
             className={styles.listCard}
             bordered={false}
@@ -150,7 +115,7 @@ export default class ActivityList extends Component {
                     <IconText type="team" text={`${item.event_memberNum}/${item.event_maxhiker}`} />,
                     <IconText
                       type="calendar"
-                      text={`${moment(item.event_starttime).format(TIME_FORMAT)} ~~ ${moment(item.event_endtime).format(TIME_FORMAT)}`}
+                      text={`${moment(item.event_starttime).format(TIME_FORMAT)} To ${moment(item.event_endtime).format(TIME_FORMAT)}`}
                     />,
                   ]}
                   extra={imgWrapper(item.event_cover)}
