@@ -40,28 +40,30 @@ class UserLayout extends React.PureComponent {
     return (
       <DocumentTitle title={this.getPageTitle()}>
         <div className={styles.container}>
-          <div className={styles.top}>
-            <div className={styles.header}>
-              <Link to="/">
-                <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>{projectName}</span>
-              </Link>
+          <div className={styles.content}>
+            <div className={styles.top}>
+              <div className={styles.header}>
+                <Link to="/">
+                  <img alt="logo" className={styles.logo} src={logo} />
+                  <span className={styles.title}>{projectName}</span>
+                </Link>
+              </div>
+              <div className={styles.desc}>{slogan}</div>
             </div>
-            <div className={styles.desc}>{slogan}</div>
+            <Switch>
+              {getRoutes(match.path, routerData).map(item =>
+                (
+                  <Route
+                    key={item.key}
+                    path={item.path}
+                    component={item.component}
+                    exact={item.exact}
+                  />
+                )
+              )}
+              <Redirect exact from="/user" to="/user/login" />
+            </Switch>
           </div>
-          <Switch>
-            {getRoutes(match.path, routerData).map(item =>
-              (
-                <Route
-                  key={item.key}
-                  path={item.path}
-                  component={item.component}
-                  exact={item.exact}
-                />
-              )
-            )}
-            <Redirect exact from="/user" to="/user/login" />
-          </Switch>
           <GlobalFooter className={styles.footer} links={links} copyright={copyright} />
         </div>
       </DocumentTitle>
