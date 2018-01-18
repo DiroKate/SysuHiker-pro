@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Form, Card, Alert, Radio, DatePicker, Button, Input, message } from 'antd';
-import { EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import { eventTypeColor } from '../../../common/config';
-import { editorStateToHtml, uploadImageCallBack } from '../../../utils/editor';
-import styles from './index.less';
-
+import RichEdiotr from '../../../components/Editor/RichEditor';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -19,21 +15,12 @@ const { TextArea } = Input;
   submitting: loading.effects['activity/create'],
 }))
 export default class ActivityCreatePage extends Component {
-  state = {
-    editorState: EditorState.createEmpty(),
-  };
-
-  onEditorStateChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
-  };
 
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const { contentValue, isEmpty } = editorStateToHtml(this.state.editorState);
+        const { contentValue, isEmpty } = this.editor.getHtmlFromEditorState();
         if (!isEmpty) {
           this.props.dispatch({
             type: 'activity/create',
@@ -52,7 +39,6 @@ export default class ActivityCreatePage extends Component {
   render() {
     const { submitting } = this.props;
     const { getFieldDecorator } = this.props.form;
-    const { editorState } = this.state;
     const formItems = [];
 
     const formItemLayout = {
@@ -214,25 +200,16 @@ export default class ActivityCreatePage extends Component {
         {...formItemLayout}
         label="活动内容"
         key="activityContent"
-        hasFeedback
       >
-        <Editor
-          localization={{ locale: 'zh' }}
-          toolbarClassName={styles.editorToolbar}
-          wrapperClassName={styles.editorWrapper}
-          editorClassName={styles.editorEditor}
-          toolbar={{
-            inline: { inDropdown: true },
-            list: { inDropdown: true },
-            textAlign: { inDropdown: true },
-            link: { inDropdown: true },
-            history: { inDropdown: true },
-            image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
-          }}
-          editorState={editorState}
-          onEditorStateChange={this.onEditorStateChange}
-        />
+        <p />
       </FormItem>);
+    const activityEditor = (
+      <FormItem
+        key="activityEditor"
+      >
+        <RichEdiotr ref={(editor) => { this.editor = editor; }} />
+      </FormItem>
+    );
 
     const notes = (
       <FormItem {...formItemLayout} label="备注" key="notes" hasFeedback>
@@ -243,7 +220,7 @@ export default class ActivityCreatePage extends Component {
     );
     const submitBtn = (
       <FormItem key="submitBtn" wrapperCol={{ span: 12, offset: 6 }} >
-        <Button className={styles.submitBtn} type="primary" htmlType="submit" size="large" loading={submitting}>
+        <Button type="primary" htmlType="submit" size="large" loading={submitting}>
           发布活动
         </Button>
       </FormItem>
@@ -258,6 +235,7 @@ export default class ActivityCreatePage extends Component {
     formItems.push(collectionTime);
     formItems.push(applyTime);
     formItems.push(activityContent);
+    formItems.push(activityEditor);
     formItems.push(notes);
     formItems.push(submitBtn);
 

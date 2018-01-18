@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-import { Card } from 'antd';
+import { Card, Button } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import DraftEditor from '../../components/DraftEditor';
+import RichEdiotr from '../../components/Editor/RichEditor';
 
 export default class Demo extends Component {
+  onHandle=() => {
+    const demo = this.myEditor.getHtmlFromEditorState();
+    console.log(demo);
+
+    const demo2 = this.myEditor2.getHtmlFromEditorState();
+    console.log(demo2);
+  }
   render() {
+    const html = ('<p>nizhidaosha</p>');
     return (
       <PageHeaderLayout
         title="demo"
@@ -14,7 +22,9 @@ export default class Demo extends Component {
           title="进行中的项目"
           bordered={false}
         >
-          <DraftEditor />
+          <RichEdiotr ref={(myEditor) => { this.myEditor = myEditor; }} />
+          <RichEdiotr ref={(myEditor) => { this.myEditor2 = myEditor; }} html={html} />
+          <Button onClick={this.onHandle} >aaaaa</Button>
         </Card>
       </PageHeaderLayout>);
   }
