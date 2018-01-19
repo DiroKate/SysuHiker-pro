@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Form, Card, Radio, Button, Input, message } from 'antd';
-import { EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import { bbsTypeOptions } from '../../../common/config';
-import { editorStateToHtml, uploadImageCallBack } from '../../../utils/editor';
-import styles from './index.less';
+import RichEdiotr from '../../../components/Editor/RichEditor';
 
 @Form.create()
 @connect(({ loading }) => ({
@@ -15,20 +12,11 @@ import styles from './index.less';
 }))
 
 export default class TeahouseCreatePage extends Component {
-  state = {
-    editorState: EditorState.createEmpty(),
-  };
-
-  onEditorStateChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
-  };
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const { contentValue, isEmpty } = editorStateToHtml(this.state.editorState);
+        const { contentValue, isEmpty } = this.editor.getHtmlFromEditorState();
         if (!isEmpty) {
           this.props.dispatch({
             type: 'teahouse/create',
@@ -47,7 +35,6 @@ export default class TeahouseCreatePage extends Component {
   render() {
     const { submitting } = this.props;
     const { getFieldDecorator } = this.props.form;
-    const { editorState } = this.state;
     const formItems = [];
 
     const formItemLayout = {
@@ -86,24 +73,14 @@ export default class TeahouseCreatePage extends Component {
       </Form.Item>);
 
     formItems.push(
-      <Form.Item key="content" {...formItemLayout} label="文章内容" hasFeedback>
-        <Editor
-          localization={{ locale: 'zh' }}
-          toolbarClassName={styles.editorToolbar}
-          wrapperClassName={styles.editorWrapper}
-          editorClassName={styles.editorEditor}
-          toolbar={{
-            inline: { inDropdown: true },
-            list: { inDropdown: true },
-            textAlign: { inDropdown: true },
-            link: { inDropdown: true },
-            history: { inDropdown: true },
-            image: { uploadCallback: uploadImageCallBack },
-          }}
-          editorState={editorState}
-          onEditorStateChange={this.onEditorStateChange}
-        />
+      <Form.Item key="contentTitle" {...formItemLayout} label="文章内容" hasFeedback>
+        <p />
       </Form.Item>);
+    formItems.push(
+      <Form.Item key="content">
+        <RichEdiotr ref={(editor) => { this.editor = editor; }} />
+      </Form.Item>);
+
     formItems.push(
       <Form.Item key="keywords" {...formItemLayout} label="关键字" hasFeedback>
         {getFieldDecorator('keywords')(<Input placeholder={"',' 分隔"} />)}
@@ -117,7 +94,7 @@ export default class TeahouseCreatePage extends Component {
         offset: 6,
       }}
       >
-        <Button className={styles.submitBtn} type="primary" htmlType="submit" size="large" loading={submitting}>
+        <Button type="primary" htmlType="submit" size="large" loading={submitting}>
           发布话题
         </Button>
 

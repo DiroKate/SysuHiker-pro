@@ -3,15 +3,14 @@ import moment from 'moment';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
 import { Card, Avatar, Divider, Collapse, Button, List, Tag } from 'antd';
-import { EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
 
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import { bbsTypeOptions } from '../../../common/config';
-import { htmlToEditorState, uploadImageCallBack } from '../../../utils/editor';
 
 import styles from './index.less';
+import SimpleEditor from '../../../components/Editor/SimpleEditor/index';
+import ReadOnlyEditor from '../../../components/Editor/ReadOnlyEditor/index';
 
 const { Panel } = Collapse;
 
@@ -22,9 +21,6 @@ const { Panel } = Collapse;
   reLoading: loading.effects['teahouse/getRe'],
 }))
 export default class TeahouseDetails extends Component {
-  state = {
-    editorState: EditorState.createEmpty(),
-  };
   componentDidMount() {
     const { match, dispatch } = this.props;
     const { id } = match.params;
@@ -38,11 +34,6 @@ export default class TeahouseDetails extends Component {
     });
   }
 
-  onEditorStateChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
-  };
   handleRePageChange = (page, pageSize) => {
     const { dispatch, match } = this.props;
     const { id } = match.params;
@@ -60,7 +51,6 @@ export default class TeahouseDetails extends Component {
   render() {
     const { details, loading,
       reList: { list: replys, pagination: rePage }, reLoading } = this.props;
-    const { editorState } = this.state;
 
     /*
     * 作者信息
@@ -79,14 +69,9 @@ export default class TeahouseDetails extends Component {
     );
 
     /* 帖子内容 */
-    const contentState = htmlToEditorState(details.post_detail);
     const content = (
-      <div style={{ marginTop: -90 }}>
-        <Editor
-          readOnly
-          defaultEditorState={contentState}
-          toolbarHidden
-        />
+      <div >
+        <ReadOnlyEditor html={details.post_detail} />
       </div>
     );
     /* 关键字 */
@@ -106,11 +91,7 @@ export default class TeahouseDetails extends Component {
     };
     const contentNode = detail => (
       <div className={styles.contentNode}>
-        <Editor
-          readOnly
-          defaultEditorState={htmlToEditorState(detail)}
-          toolbarHidden
-        />
+        <ReadOnlyEditor html={detail} />
       </div>
     );
     // 表头
@@ -147,20 +128,7 @@ export default class TeahouseDetails extends Component {
     /* 回复框 */
     const reEditor = (
       <div className={styles.reEditorWrapper}>
-        <Editor
-          localization={{ locale: 'zh' }}
-          toolbarClassName={styles.editorToolbar}
-          wrapperClassName={styles.editorWrapper}
-          editorClassName={styles.editorEditor}
-          toolbarOnFocus
-          toolbar={{
-            options: ['inline', 'colorPicker', 'link', 'image', 'emoji', 'history'],
-            inline: { options: ['bold', 'italic', 'underline'] },
-            image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
-          }}
-          editorState={editorState}
-          onEditorStateChange={this.onEditorStateChange}
-        />
+        <SimpleEditor ref={(simpleEditor) => { this.simpleEditor = simpleEditor; }} />
         <Button className={styles.reSubmitBtn} size="large" type="primary" onClick={this.handleReSubmit}>发表评论</Button>
       </div>
     );

@@ -4,16 +4,15 @@ import { connect } from 'dva';
 import { Link } from 'dva/router';
 import { Card, Avatar, Divider, Icon, Table, Collapse,
   Modal, Button, List, Row, Col, Tag } from 'antd';
-import { EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
 
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import DescriptionList from '../../../components/DescriptionList';
 import { eventTypeColor, genderColor } from '../../../common/config';
 
-import { htmlToEditorState, uploadImageCallBack } from '../../../utils/editor';
 import JoinModal from './JoinModal';
 import styles from './index.less';
+import SimpleEditor from '../../../components/Editor/SimpleEditor/index';
+import ReadOnlyEditor from '../../../components/Editor/ReadOnlyEditor/index';
 
 const { Description } = DescriptionList;
 const { Panel } = Collapse;
@@ -29,7 +28,6 @@ const TIME_FORMAT = 'MM月DD日(dddd) HH:mm';
 }))
 export default class ActivityDetails extends Component {
   state = {
-    editorState: EditorState.createEmpty(),
     modalVisible: false,
     modalInputValues: {},
   };
@@ -49,11 +47,7 @@ export default class ActivityDetails extends Component {
       payload: { id, page: 1, pageSize: 5 },
     });
   }
-  onEditorStateChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
-  };
+
   handleModalVisible = (flag) => {
     this.setState({
       modalVisible: !!flag,
@@ -77,7 +71,7 @@ export default class ActivityDetails extends Component {
   render() {
     const { details, loading, members, mLoading,
       reList: { list: replys, pagination: rePage }, reLoading } = this.props;
-    const { editorState, modalVisible, modalInputValues } = this.state;
+    const { modalVisible, modalInputValues } = this.state;
     // TODO: 处理当前页面状态
     const isOpen = true;
     const isAdmin = false;
@@ -140,7 +134,7 @@ export default class ActivityDetails extends Component {
       </span>);
     const duration = moment(details.event_endtime) - moment(details.event_starttime);
 
-    const contentState = htmlToEditorState(details.event_detail);
+    const htmlStr = details.event_detail;
 
     const baseInfoCard = (
       <Card bordered={false} loading={loading}>
@@ -158,12 +152,8 @@ export default class ActivityDetails extends Component {
         </DescriptionList>
         <Divider style={{ marginBottom: 32 }} />
         <DescriptionList size="large" title="活动信息" col={1} style={{ marginBottom: 32 }}>
-          <Description style={{ marginTop: -96 }}>
-            <Editor
-              readOnly
-              defaultEditorState={contentState}
-              toolbarHidden
-            />
+          <Description>
+            <ReadOnlyEditor html={htmlStr} />
           </Description>
         </DescriptionList>
         <Divider style={{ marginBottom: 32 }} />
@@ -240,29 +230,13 @@ export default class ActivityDetails extends Component {
 
     const contentNode = detail => (
       <div className={styles.contentNode}>
-        <Editor
-          readOnly
-          defaultEditorState={htmlToEditorState(detail)}
-          toolbarHidden
-        />
+        <ReadOnlyEditor html={detail} />
       </div>
     );
     const reEditor = (
       <div className={styles.reEditorWrapper}>
-        <Editor
-          localization={{ locale: 'zh' }}
-          toolbarClassName={styles.editorToolbar}
-          wrapperClassName={styles.editorWrapper}
-          editorClassName={styles.editorEditor}
-          toolbarOnFocus
-          toolbar={{
-            options: ['inline', 'colorPicker', 'link', 'image', 'emoji', 'history'],
-            inline: { options: ['bold', 'italic', 'underline'] },
-            image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
-          }}
-          editorState={editorState}
-          onEditorStateChange={this.onEditorStateChange}
-        />
+
+        <SimpleEditor ref={(simpleEditor) => { this.simpleEditor = simpleEditor; }} />
         <Button className={styles.reSubmitBtn} size="large" type="primary" onClick={this.handleReSubmit}>发表评论</Button>
       </div>
     );

@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Form, Input, Alert, Icon, Radio, Checkbox } from 'antd';
 
-import { statement,genderColor } from '../../../common/config';
+import { statement, genderColor } from '../../../common/config';
 
 const FormItem = Form.Item;
 
 @Form.create()
-export default class JoinModal extends PureComponent {
+export default class JoinModal extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {

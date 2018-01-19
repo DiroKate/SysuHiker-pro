@@ -44,7 +44,7 @@
     "react-container-query": "^0.9.1",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.2.0",
-    "react-draft-wysiwyg": "^1.10.12",
+    "react-draft-wysiwyg": "^1.12.5",
     "react-fittext": "^1.0.0",
     "url-polyfill": "^1.0.10"
   },

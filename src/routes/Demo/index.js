@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Card, Button } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import RichEdiotr from '../../components/Editor/RichEditor';
+import ReadOnlyEditor from '../../components/Editor/ReadOnlyEditor';
+import SimpleEditor from '../../components/Editor/SimpleEditor/index';
 
 export default class Demo extends Component {
   onHandle=() => {
@@ -25,6 +27,9 @@ export default class Demo extends Component {
           <RichEdiotr ref={(myEditor) => { this.myEditor = myEditor; }} />
           <RichEdiotr ref={(myEditor) => { this.myEditor2 = myEditor; }} html={html} />
           <Button onClick={this.onHandle} >aaaaa</Button>
+          <ReadOnlyEditor html={html} />
+          <SimpleEditor ref={(myEditor) => { this.myEditor = myEditor; }} />
+
         </Card>
       </PageHeaderLayout>);
   }
