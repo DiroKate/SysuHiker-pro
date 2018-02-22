@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Layout, Icon, message, BackTop } from 'antd';
 import DocumentTitle from 'react-document-title';
@@ -213,9 +213,9 @@ class BasicLayout extends React.PureComponent {
           <Footer style={{ padding: 0 }}>
             <GlobalFooter
               copyright={
-                <div>
-                   Copyright <Icon type="copyright" /> 2018 {company}
-                </div>
+                <Fragment>
+                  Copyright <Icon type="copyright" /> 2018 {company}
+                </Fragment>
               }
             />
           </Footer>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link, Redirect, Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
 import { Icon } from 'antd';
@@ -23,7 +23,7 @@ const links = [{
   href: '',
 }];
 
-const copyright = <div>Copyright <Icon type="copyright" /> 2018 {company}</div>;
+const copyright = <Fragment>Copyright <Icon type="copyright" /> 2018 {company}</Fragment>;
 
 class UserLayout extends React.PureComponent {
   getPageTitle() {
@@ -64,7 +64,7 @@ class UserLayout extends React.PureComponent {
               <Redirect exact from="/user" to="/user/login" />
             </Switch>
           </div>
-          <GlobalFooter className={styles.footer} links={links} copyright={copyright} />
+          <GlobalFooter links={links} copyright={copyright} />
         </div>
       </DocumentTitle>
     );
