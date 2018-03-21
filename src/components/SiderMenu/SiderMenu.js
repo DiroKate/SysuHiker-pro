@@ -14,7 +14,7 @@ const { SubMenu } = Menu;
 //   icon: <Icon type="setting" />,
 const getIcon = (icon) => {
   if (typeof icon === 'string' && icon.indexOf('http') === 0) {
-    return <img src={icon} alt="icon" className={styles.icon} />;
+    return <img src={icon} alt="icon" className={`${styles.icon} sider-menu-item-img`} />;
   }
   if (typeof icon === 'string') {
     return <Icon type={icon} />;
@@ -113,23 +113,28 @@ export default class SiderMenu extends PureComponent {
    */
   getSubMenuOrItem = (item) => {
     if (item.children && item.children.some(child => child.name)) {
-      return (
-        <SubMenu
-          title={
-            item.icon ? (
-              <span>
-                {getIcon(item.icon)}
-                <span>{item.name}</span>
-              </span>
-            ) : (
-              item.name
-            )
-          }
-          key={item.path}
-        >
-          {this.getNavMenuItems(item.children)}
-        </SubMenu>
-      );
+      const childrenItems = this.getNavMenuItems(item.children);
+      // 当无子菜单时就不展示菜单
+      if (childrenItems && childrenItems.length > 0) {
+        return (
+          <SubMenu
+            title={
+              item.icon ? (
+                <span>
+                  {getIcon(item.icon)}
+                  <span>{item.name}</span>
+                </span>
+              ) : (
+                  item.name
+                )
+            }
+            key={item.path}
+          >
+            {childrenItems}
+          </SubMenu>
+        );
+      }
+      return null;
     } else {
       return (
         <Menu.Item key={item.path}>{this.getMenuItemPath(item)}</Menu.Item>
