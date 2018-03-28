@@ -51,16 +51,14 @@ class UserLayout extends React.PureComponent {
               <div className={styles.desc}>{slogan}</div>
             </div>
             <Switch>
-              {getRoutes(match.path, routerData).map(item =>
-                (
-                  <Route
-                    key={item.key}
-                    path={item.path}
-                    component={item.component}
-                    exact={item.exact}
-                  />
-                )
-              )}
+              {getRoutes(match.path, routerData).map(item => (
+                <Route
+                  key={item.key}
+                  path={item.path}
+                  component={item.component}
+                  exact={item.exact}
+                />
+              ))}
               <Redirect exact from="/user" to="/user/login" />
             </Switch>
           </div>
