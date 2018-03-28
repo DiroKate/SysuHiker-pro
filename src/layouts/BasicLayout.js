@@ -26,20 +26,39 @@ const { AuthorizedRoute, check } = Authorized;
  * 根据菜单取得重定向地址.
  */
 const redirectData = [];
-const getRedirect = (item) => {
+const getRedirect = item => {
   if (item && item.children) {
     if (item.children[0] && item.children[0].path) {
       redirectData.push({
         from: `${item.path}`,
         to: `${item.children[0].path}`,
       });
-      item.children.forEach((children) => {
+      item.children.forEach(children => {
         getRedirect(children);
       });
     }
   }
 };
 getMenuData().forEach(getRedirect);
+
+/**
+ * 获取面包屑映射
+ * @param {Object} menuData 菜单配置
+ * @param {Object} routerData 路由配置
+ */
+const getBreadcrumbNameMap = (menuData, routerData) => {
+  const result = {};
+  const childResult = {};
+  for (const i of menuData) {
+    if (!routerData[i.path]) {
+      result[i.path] = i;
+    }
+    if (i.children) {
+      Object.assign(childResult, getBreadcrumbNameMap(i.children, routerData));
+    }
+  }
+  return Object.assign({}, routerData, result, childResult);
+};
 
 const query = {
   'screen-xs': {
@@ -63,7 +82,7 @@ const query = {
 };
 
 let isMobile;
-enquireScreen((b) => {
+enquireScreen(b => {
   isMobile = b;
 });
 
@@ -71,7 +90,7 @@ class BasicLayout extends React.PureComponent {
   static childContextTypes = {
     location: PropTypes.object,
     breadcrumbNameMap: PropTypes.object,
-  }
+  };
   state = {
     isMobile,
   };
@@ -79,11 +98,11 @@ class BasicLayout extends React.PureComponent {
     const { location, routerData } = this.props;
     return {
       location,
-      breadcrumbNameMap: routerData,
+      breadcrumbNameMap: getBreadcrumbNameMap(getMenuData(), routerData),
     };
   }
   componentDidMount() {
-    enquireScreen((mobile) => {
+    enquireScreen(mobile => {
       this.setState({
         isMobile: mobile,
       });
@@ -114,25 +133,26 @@ class BasicLayout extends React.PureComponent {
     } else {
       const { routerData } = this.props;
       // get the first authorized route path in routerData
-      const authorizedPath = Object.keys(routerData).find(item =>
-        check(routerData[item].authority, item) && item !== '/');
+      const authorizedPath = Object.keys(routerData).find(
+        item => check(routerData[item].authority, item) && item !== '/'
+      );
       return authorizedPath;
     }
     return redirect;
-  }
-  handleMenuCollapse = (collapsed) => {
+  };
+  handleMenuCollapse = collapsed => {
     this.props.dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: collapsed,
     });
-  }
-  handleNoticeClear = (type) => {
+  };
+  handleNoticeClear = type => {
     message.success(`清空了${type}`);
     this.props.dispatch({
       type: 'global/clearNotices',
       payload: type,
     });
-  }
+  };
   handleMenuClick = ({ key }) => {
     if (key === 'triggerError') {
       this.props.dispatch(routerRedux.push('/exception/trigger'));
@@ -147,17 +167,23 @@ class BasicLayout extends React.PureComponent {
         routerRedux.push('/me')
       );
     }
-  }
-  handleNoticeVisibleChange = (visible) => {
+  };
+  handleNoticeVisibleChange = visible => {
     if (visible) {
       this.props.dispatch({
         type: 'global/fetchNotices',
       });
     }
-  }
+  };
   render() {
     const {
-      currentUser, collapsed, fetchingNotices, notices, routerData, match, location,
+      currentUser,
+      collapsed,
+      fetchingNotices,
+      notices,
+      routerData,
+      match,
+      location,
     } = this.props;
     const bashRedirect = this.getBashRedirect();
     const layout = (
@@ -191,25 +217,19 @@ class BasicLayout extends React.PureComponent {
           </Header>
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
             <Switch>
-              {
-                redirectData.map(item =>
-                  <Redirect key={item.from} exact from={item.from} to={item.to} />
-                )
-              }
-              {
-                getRoutes(match.path, routerData).map(item =>
-                  (
-                    <AuthorizedRoute
-                      key={item.key}
-                      path={item.path}
-                      component={item.component}
-                      exact={item.exact}
-                      authority={item.authority}
-                      redirectPath="/exception/403"
-                    />
-                  )
-                )
-              }
+              {redirectData.map(item => (
+                <Redirect key={item.from} exact from={item.from} to={item.to} />
+              ))}
+              {getRoutes(match.path, routerData).map(item => (
+                <AuthorizedRoute
+                  key={item.key}
+                  path={item.path}
+                  component={item.component}
+                  exact={item.exact}
+                  authority={item.authority}
+                  redirectPath="/exception/403"
+                />
+              ))}
               <Redirect exact from="/" to={bashRedirect} />
               <Route render={NotFound} />
             </Switch>
